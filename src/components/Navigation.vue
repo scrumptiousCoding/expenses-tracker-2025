@@ -4,7 +4,7 @@
       <v-card-text class="d-flex flex-wrap">
         <div class="flex-1-0">
           <v-select
-            v-model="selectedTimeframe"
+            v-model="tfOpt"
             :items="timeFrameOptions"
             item-title="description"
             item-value="id"
@@ -28,8 +28,20 @@
           </v-btn>
         </div>
         <div class="align-self-center">
-          <v-btn variant="text" density="comfortable" icon="mdi-cog"> </v-btn>
-          <!-- devision of funds -->
+          <v-menu location="bottom">
+            <template v-slot:activator="{ props }">
+              <v-btn variant="text" density="comfortable" icon="mdi-cog" v-bind="props"></v-btn>
+            </template>
+
+            <v-list>
+              <v-list-item @click="deselectTimeframe()">
+                <v-list-item-title>De-select time frame</v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="addDummyData()">
+                <v-list-item-title>Add dummy time frames</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
         </div>
       </v-card-text>
     </div>
@@ -82,20 +94,51 @@
   </v-dialog>
 </template>
 <script lang="ts">
+import { useAppStore } from "@/stores/app";
 import { Component, Vue, toNative } from "vue-facing-decorator";
 @Component
 class NavigationComp extends Vue {
-  timeFrameOptions = [];
-  selectedTimeframe = null;
+  tfOpt = null
 
   showNewTimeframeModal = false;
-  endDate = null;
-  startDate = null;
-  description = "";
+  endDate: Date = new Date();
+  startDate: Date = new Date();
+  description ="";
+  
+  get appStore() {
+    return useAppStore()
+  }
+  
+  get timeFrameOptions() {
+    return this.appStore.timeframes
+  }
 
-  openNewTimeframeModal() {}
-  changeTimeframe() {}
-  addNewTimeframe() {}
+  openNewTimeframeModal() {
+    this.showNewTimeframeModal = true
+    this.startDate = new Date();
+    this.endDate = new Date();
+    this.description = "";
+  }
+  changeTimeframe() {
+    if (this.tfOpt !== null) {
+      this.appStore.setSelectedTimeframe(this.tfOpt)
+    }
+  }
+  deselectTimeframe() {
+    this.appStore.clearTimeframe()
+    this.tfOpt = null
+  }
+  addDummyData() {
+    this.appStore.addDummyTimeframe()
+  }
+  addNewTimeframe() {
+      this.appStore.addNewTimeframe(
+        this.description,
+        this.startDate,
+        this.endDate
+      );
+      this.showNewTimeframeModal = false;
+  }
 }
 export default toNative(NavigationComp);
 </script>

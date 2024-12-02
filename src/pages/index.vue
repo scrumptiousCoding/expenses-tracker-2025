@@ -1,34 +1,77 @@
 <template>
   <v-container>
-
     <v-row>
-    <v-col cols="12">
-      <navigation-comp />
-    </v-col>
-  </v-row>
-  </v-container>
+      <v-col cols="12">
+        <navigation-comp />
+      </v-col>
+    </v-row>
+    <v-row v-if="!selectedTimeframe">
+      <v-col class="text-center">
+        Please select a timeframe to view
+      </v-col>
+    </v-row>
+    <div v-if="selectedTimeframe">
+      <v-row>
+        <v-col cols="4">
+           <Statistics />
+        </v-col>
+        <v-col cols="4"> 
+          <apexchart type="donut" :options="options" :series="series"></apexchart>
+        </v-col>
+        <v-col cols="4">
+          <apexchart type="donut" :options="options" :series="series"></apexchart>
+        </v-col>
+        <v-col cols="12">
+          <!-- <table-display /> -->
+        </v-col>
+      </v-row>
+    </div>
 
-  
+  </v-container>
 </template>
 <script lang="ts">
-import { Component, Setup, Vue, toNative } from "vue-facing-decorator";
+import { Component, Vue, toNative } from "vue-facing-decorator";
 import NavigationComp from "@/components/Navigation.vue";
 import { useAppStore } from "@/stores/app";
+import Statistics from "@/components/Statistics.vue";
 
 @Component({
   components: {
-    NavigationComp
+    NavigationComp,
+    Statistics
   }
 })
 class IndexPage extends Vue {
-  @Setup(() => {
-    const appStore = useAppStore()
-    return {useAppStore: appStore}
-  })
+  options= {
+        chart: {
+          id: 'vuechart-example'
+        },
+        pie: {
+          donut: {
+            labels: {
+              show: true,
+              name: {
+                show: true
+              },
+              value: {
+                show: true
+              }
+            }
+          }
+        }
+      }
 
-  mounted(){
-    console.log('Main page mounted');
-    
+      series= [30, 40, 45, 50, 49, 60, 70, 91]
+  mounted() {
+    console.log("Main page mounted");
+  }
+
+  get appStore() {
+    return useAppStore()
+  }
+
+  get selectedTimeframe() {
+    return this.appStore.selectedTimeframe
   }
 }
 export default toNative(IndexPage);

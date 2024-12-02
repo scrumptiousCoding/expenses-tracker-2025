@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import type { ITimeframe } from './interfaces/ITimeframe'
 import type { ITransaction } from './interfaces/ITimeframe'
 
-interface ISystemStore {
+export interface ISystemStore {
   timeframes: ITimeframe[]
   selectedTimeframe: ITimeframe | null
 }
@@ -14,13 +14,13 @@ export const useAppStore = defineStore('app', {
     selectedTimeframe: null
   }),
   getters: {
-    getTimeframeOptions(state): any {
+    getTimeframeOptions(state) {
       return state.timeframes
     }
   },
   actions: {
     addNewTimeframe(description: string, start: Date, end: Date) {
-      let newTf = {
+      const newTf = {
         description: description,
         startDate: start,
         endDate: end,
@@ -31,6 +31,23 @@ export const useAppStore = defineStore('app', {
     },
     setSelectedTimeframe(tf: ITimeframe) {
       this.selectedTimeframe = tf
+    },
+    clearTimeframe(){
+      this.selectedTimeframe = null
+    },
+    addDummyTimeframe(){
+      for (let j = 0; j < 5; j++) {
+        this.timeframes.push({
+          
+    description: 'testing '+ j,
+    startDate: new Date,
+    endDate: new Date,
+    id: this.timeframes.length,
+
+    transaction: []
+
+        })
+      }
     },
     addDummyData(){
       if (this.selectedTimeframe) {
