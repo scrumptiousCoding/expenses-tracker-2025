@@ -16,7 +16,51 @@ export const useAppStore = defineStore('app', {
   getters: {
     getTimeframeOptions(state) {
       return state.timeframes
-    }
+    },
+    getTotalIncome(state){
+      let total = 0
+      let filter = state.selectedTimeframe?.transaction.filter((x) => x.type === 'Income')
+      if (filter !== undefined) {
+        for (let i = 0; i < filter.length; i++) {
+          const element = filter[i];
+          total += element.amount
+        }
+      }
+      return total
+    },
+    getTotalFixedExpenses(state){
+      let total = 0
+      let filter = state.selectedTimeframe?.transaction.filter((x) => x.type === 'Fixed Expenses')
+      if (filter !== undefined) {
+        for (let i = 0; i < filter.length; i++) {
+          const element = filter[i];
+          total += element.amount
+        }
+      }
+      return total
+    },
+    getTotalOtherExpenses(state){
+      let total = 0
+      let filter = state.selectedTimeframe?.transaction.filter((x) => x.type === 'other Expenses')
+      if (filter !== undefined) {
+        for (let i = 0; i < filter.length; i++) {
+          const element = filter[i];
+          total += element.amount
+        }
+      }
+      return total
+    },
+    getTotalSavings(state){
+      let total = 0
+      let filter = state.selectedTimeframe?.transaction.filter((x) => x.type === 'Savings')
+      if (filter !== undefined) {
+        for (let i = 0; i < filter.length; i++) {
+          const element = filter[i];
+          total += element.amount
+        }
+      }
+      return total
+    },
   },
   actions: {
     addNewTimeframe(description: string, start: Date, end: Date) {

@@ -1,27 +1,37 @@
 <template>
-    
   <v-card height="50" image="@/assets/Strawberries.jpg" class="mb-3"></v-card>
-  <!-- <info-card title="Income" :amount="999999999.99" />
-  <info-card title="Fixed Expenses" :amount="999999999.99" />
-  <info-card title="Other Expenses" :amount="999999999.99" />
-  <info-card title="Savings" :amount="999999999.99" /> -->
-  <InfoCard />
-  <InfoCard />
-  <InfoCard />
-  <InfoCard />
-  </template>
-  <script lang="ts">
-//   import { useAppStore } from "@/stores/app";
-  import { Component, Vue, toNative } from "vue-facing-decorator";
+  <info-card title="Income" :amount="getIncome" />
+  <info-card title="Fixed Expenses" :amount="getFixedExpenses" />
+  <info-card title="Other Expenses" :amount="getOtherExpenses" />
+  <info-card title="Savings" :amount="getSavings" />
+</template>
+<script lang="ts">
+import { useAppStore } from "@/stores/app";
+import { Component, Vue, toNative } from "vue-facing-decorator";
 import InfoCard from "./InfoCard.vue";
-  @Component({
+@Component({
   components: {
-    InfoCard
-  }
+    InfoCard,
+  },
 })
-  class Statistics extends Vue {
+class Statistics extends Vue {
+  get appStore() {
+    return useAppStore();
   }
-  export default toNative(Statistics);
-  </script>
-  <style></style>
-  
+
+  get getSavings() {
+    return this.appStore.getTotalSavings;
+  }
+  get getIncome() {
+    return this.appStore.getTotalIncome;
+  }
+  get getFixedExpenses() {
+    return this.appStore.getTotalFixedExpenses;
+  }
+  get getOtherExpenses() {
+    return this.appStore.getTotalOtherExpenses;
+  }
+}
+export default toNative(Statistics);
+</script>
+<style></style>
