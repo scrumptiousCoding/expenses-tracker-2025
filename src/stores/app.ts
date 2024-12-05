@@ -18,7 +18,7 @@ export const useAppStore = defineStore('app', {
       return state.timeframes
     },
     getTotalIncome(state){
-      let total = 0
+      let total: number = 0
       let filter = state.selectedTimeframe?.transaction.filter((x) => x.type === 'Income')
       if (filter !== undefined) {
         for (let i = 0; i < filter.length; i++) {
@@ -29,7 +29,7 @@ export const useAppStore = defineStore('app', {
       return total
     },
     getTotalFixedExpenses(state){
-      let total = 0
+      let total: number = 0
       let filter = state.selectedTimeframe?.transaction.filter((x) => x.type === 'Fixed Expenses')
       if (filter !== undefined) {
         for (let i = 0; i < filter.length; i++) {
@@ -40,8 +40,8 @@ export const useAppStore = defineStore('app', {
       return total
     },
     getTotalOtherExpenses(state){
-      let total = 0
-      let filter = state.selectedTimeframe?.transaction.filter((x) => x.type === 'other Expenses')
+      let total: number = 0
+      let filter = state.selectedTimeframe?.transaction.filter((x) => x.type === 'Other Expenses')
       if (filter !== undefined) {
         for (let i = 0; i < filter.length; i++) {
           const element = filter[i];
@@ -51,7 +51,7 @@ export const useAppStore = defineStore('app', {
       return total
     },
     getTotalSavings(state){
-      let total = 0
+      let total: number = 0
       let filter = state.selectedTimeframe?.transaction.filter((x) => x.type === 'Savings')
       if (filter !== undefined) {
         for (let i = 0; i < filter.length; i++) {
@@ -106,13 +106,13 @@ export const useAppStore = defineStore('app', {
         }
       }
     },
-    addNewTransaction(newTransaction: ITransaction){
+    addNewTransaction(description:string, date: Date, amount: number, type: string){
       this.selectedTimeframe?.transaction.push(
         {
-          description: newTransaction.description,
-          date: newTransaction.date,
-          type: newTransaction.type,
-          amount: newTransaction.amount,
+          description: description,
+          date: date,
+          type: type,
+          amount: amount,
           id: this.selectedTimeframe.transaction.length
         }
       )

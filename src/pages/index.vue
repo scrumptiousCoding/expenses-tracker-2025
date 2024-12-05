@@ -22,7 +22,7 @@
           <apexchart type="donut" :options="options" :series="series"></apexchart>
         </v-col>
         <v-col cols="12">
-          <!-- <table-display /> -->
+          <TableDisplay />
         </v-col>
       </v-row>
     </div>
@@ -34,11 +34,13 @@ import { Component, Vue, toNative } from "vue-facing-decorator";
 import NavigationComp from "@/components/Navigation.vue";
 import { useAppStore } from "@/stores/app";
 import Statistics from "@/components/Statistics.vue";
+import TableDisplay from "@/components/TableDisplay.vue";
 
 @Component({
   components: {
     NavigationComp,
-    Statistics
+    Statistics,
+    TableDisplay
   }
 })
 class IndexPage extends Vue {
