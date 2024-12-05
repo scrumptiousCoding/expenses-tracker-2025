@@ -51,7 +51,7 @@
 
           <v-select
             v-model="newTransactionType"
-            :items="transactionTypes"
+            :items="appStore.transactionTypes"
             class="mt-2 flex-1-1-100"
             variant="outlined"
             hide-details="auto"
@@ -89,12 +89,12 @@
 </template>
 <script lang="ts">
 import { useAppStore } from "@/stores/app";
+import { useGraphStore } from "@/stores/graphStore";
 import { Component, Vue, toNative } from "vue-facing-decorator";
 @Component
 class TableDisplay extends Vue {
   loadTableData: boolean = false;
   addNewTransactionModal: boolean = false;
-  transactionTypes = ["Income", "Fixed Expenses", "Other Expenses", "Savings"];
   newTransactionDescription: string = "";
   newTransactionDate: Date = new Date();
   newTransactionType: string = "Other Expenses";
@@ -105,16 +105,18 @@ class TableDisplay extends Vue {
   get appStore() {
     return useAppStore();
   }
+  get graphStore() {
+    return useGraphStore();
+  }
 
   get selectedTimeframe() {
     return this.appStore.selectedTimeframe;
   }
 
-  mounted() {}
-
   addDummyData() {
     this.loadTableData = true;
     this.appStore.addDummyData();
+    this.graphStore.constructData()
     this.loadTableData = false;
   }
   addNewTransaction() {
@@ -129,6 +131,7 @@ class TableDisplay extends Vue {
     this.newTransactionDate = new Date();
     this.newTransactionType = "Other Expenses";
     this.newTransactionAmount = "0";
+    this.graphStore.constructData()
     this.loadTableData = false;
     this.addNewTransactionModal = false;
   }

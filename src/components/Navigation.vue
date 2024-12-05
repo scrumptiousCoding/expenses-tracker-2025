@@ -95,6 +95,7 @@
 </template>
 <script lang="ts">
 import { useAppStore } from "@/stores/app";
+import { useGraphStore } from "@/stores/graphStore";
 import { Component, Vue, toNative } from "vue-facing-decorator";
 @Component
 class NavigationComp extends Vue {
@@ -109,6 +110,9 @@ class NavigationComp extends Vue {
     return useAppStore()
   }
   
+  get graphStore() {
+    return useGraphStore()
+  }
   get timeFrameOptions() {
     return this.appStore.timeframes
   }
@@ -122,6 +126,7 @@ class NavigationComp extends Vue {
   changeTimeframe() {
     if (this.tfOpt !== null) {
       this.appStore.setSelectedTimeframe(this.tfOpt)
+      this.graphStore.constructData()
     }
   }
   deselectTimeframe() {

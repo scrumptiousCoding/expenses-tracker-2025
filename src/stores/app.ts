@@ -5,18 +5,17 @@ import type { ITransaction } from './interfaces/ITimeframe'
 
 export interface ISystemStore {
   timeframes: ITimeframe[]
-  selectedTimeframe: ITimeframe | null
+  selectedTimeframe: ITimeframe | null,
+  transactionTypes: string[]
 }
 
 export const useAppStore = defineStore('app', {
   state: (): ISystemStore => ({
     timeframes: [],
-    selectedTimeframe: null
+    selectedTimeframe: null,
+    transactionTypes: ["Income", "Fixed Expenses", "Other Expenses", "Savings"]
   }),
   getters: {
-    getTimeframeOptions(state) {
-      return state.timeframes
-    },
     getTotalIncome(state){
       let total: number = 0
       let filter = state.selectedTimeframe?.transaction.filter((x) => x.type === 'Income')
@@ -63,6 +62,17 @@ export const useAppStore = defineStore('app', {
     },
   },
   actions: {
+    calculateTotal(type: string) {
+      let total: number = 0
+      let filter = this.selectedTimeframe?.transaction.filter((x) => x.type === type)
+      if (filter !== undefined) {
+        for (let i = 0; i < filter.length; i++) {
+          const element = filter[i];
+          total += element.amount
+        }
+      }
+      return total
+    },
     addNewTimeframe(description: string, start: Date, end: Date) {
       const newTf = {
         description: description,

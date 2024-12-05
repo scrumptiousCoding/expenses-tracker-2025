@@ -16,10 +16,22 @@
            <Statistics />
         </v-col>
         <v-col cols="4"> 
-          <apexchart type="donut" :options="options" :series="series"></apexchart>
+          <div v-if="graphStore.seriesData.length <= 0">nothing here yet</div>
+          <apexchart v-if="graphStore.seriesData.length > 0" type="donut" :options="options" :series="graphStore.seriesData"></apexchart>
         </v-col>
         <v-col cols="4">
-          <apexchart type="donut" :options="options" :series="series"></apexchart>
+          <v-card>
+            <v-card-text>
+              Achievements
+              <ul>
+                <li>no spending streak</li>
+                <li>minimum spending month</li>
+                <li>extra income achievements</li>
+                <li>checkin</li>
+                <li>https://www.creditkarma.com/money/i/money-saving-challenges</li>
+              </ul>
+            </v-card-text>
+          </v-card>
         </v-col>
         <v-col cols="12">
           <TableDisplay />
@@ -35,6 +47,7 @@ import NavigationComp from "@/components/Navigation.vue";
 import { useAppStore } from "@/stores/app";
 import Statistics from "@/components/Statistics.vue";
 import TableDisplay from "@/components/TableDisplay.vue";
+import { useGraphStore } from "@/stores/graphStore";
 
 @Component({
   components: {
@@ -50,7 +63,8 @@ class IndexPage extends Vue {
         },
         pie: {
           donut: {
-            labels: {
+            labels: 
+            {
               show: true,
               name: {
                 show: true
@@ -60,16 +74,20 @@ class IndexPage extends Vue {
               }
             }
           }
-        }
+        },
+        labels: this.graphStore.labels
       }
-
-      series= [30, 40, 45, 50, 49, 60, 70, 91]
   mounted() {
     console.log("Main page mounted");
+    this.graphStore.constructData()
   }
 
   get appStore() {
     return useAppStore()
+  }
+
+  get graphStore() {
+    return useGraphStore()
   }
 
   get selectedTimeframe() {
