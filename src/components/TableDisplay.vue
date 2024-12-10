@@ -14,11 +14,11 @@
       <v-btn block @click="addNewTransactionModal = !addNewTransactionModal"
         >Add new</v-btn
       >
-      <v-btn block @click="addDummyData">Add Dummy Data</v-btn>
-      <v-btn block>Fixed Expenses</v-btn>
-      <v-btn block>Other Expenses</v-btn>
-      <v-btn block>Income</v-btn>
-      <v-btn block>Savings</v-btn>
+      <v-btn class="mb-2" block @click="addDummyData">Add Dummy Data</v-btn>
+      <v-btn class="mb-2" block>Fixed Expenses</v-btn>
+      <v-btn class="mb-2" block>Other Expenses</v-btn>
+      <v-btn class="mb-2" block>Income</v-btn>
+      <v-btn class="mb-2" block>Savings</v-btn>
       <v-card
         height="185"
         image="@/assets/Strawberries.jpg"
@@ -70,7 +70,7 @@
       </v-card-text>
       <v-card-actions class="mb-3">
         <v-btn
-          class="mr2"
+          class="mr-2"
           text="Cancel"
           variant="outlined"
           color="error"
