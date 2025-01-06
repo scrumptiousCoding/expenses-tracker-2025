@@ -11,7 +11,7 @@
       </v-card>
     </v-col>
     <v-col cols="2">
-      <v-btn block @click="addNewTransactionModal = !addNewTransactionModal"
+      <v-btn class="mb-2" block @click="addNewTransactionModal = !addNewTransactionModal"
         >Add new</v-btn
       >
       <v-btn class="mb-2" block @click="addDummyData">Add Dummy Data</v-btn>

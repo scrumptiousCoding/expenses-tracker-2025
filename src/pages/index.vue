@@ -22,14 +22,7 @@
         <v-col cols="4">
           <v-card>
             <v-card-text>
-              Achievements
-              <ul>
-                <li>no spending streak</li>
-                <li>minimum spending month</li>
-                <li>extra income achievements</li>
-                <li>checkin</li>
-                <li>https://www.creditkarma.com/money/i/money-saving-challenges</li>
-              </ul>
+              Notes
             </v-card-text>
           </v-card>
         </v-col>
@@ -75,11 +68,11 @@ class IndexPage extends Vue {
             }
           }
         },
-        labels: this.graphStore.labels
+        labels: ['Fixed Expenses', 'Other Expenses', 'Savings']
       }
   mounted() {
     console.log("Main page mounted");
-    this.graphStore.constructData()
+    this.appStore.clearTimeframe()
   }
 
   get appStore() {

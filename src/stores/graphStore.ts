@@ -16,17 +16,24 @@ export const useGraphStore = defineStore('graphStore', {
     getters: {
     },
     actions: {
-        constructData(){
-            this.seriesData = []
+        constructLabels() {
             this.labels = []
             for (let i = 0; i < this.appStore.transactionTypes.length; i++) {
-              let amt = this.appStore.calculateTotal(this.appStore.transactionTypes[i])
-              this.seriesData.push(amt)
-              this.labels.push(this.appStore.transactionTypes[i])
+                const transType = this.appStore.transactionTypes[i]
+                if (transType !== "Income") {
+                    this.labels.push(transType)
+                }
             }
-            console.log('amt 3', this.seriesData);
-            console.log('asdaf',this.labels);
-            
+        },
+        constructData(){
+            this.seriesData = []
+            for (let i = 0; i < this.appStore.transactionTypes.length; i++) {
+                const transType = this.appStore.transactionTypes[i]
+                if (transType !== "Income") {
+                    let amt = this.appStore.calculateTotal(transType)
+                    this.seriesData.push(amt)
+                }
+            }
         }
     }
 })
