@@ -23,6 +23,7 @@
           <v-card>
             <v-card-text>
               Notes
+              - this assumes that savings are in a seperate account and putting something in savings effectively removes it from your account
             </v-card-text>
           </v-card>
         </v-col>

@@ -5,9 +5,22 @@
         <v-data-table
           :loading="loadTableData"
           density="compact"
+          :headers="headers"
+          :search="filterType"
+          item-value="type"
           :items="selectedTimeframe?.transaction"
           items-per-page="20"
-        ></v-data-table>
+        >
+          <template v-slot:item.type="{ item }">
+            <td>
+              <v-chip
+                :color="getChipColor(item.type)"
+                size="small"
+                >{{ item.type }}</v-chip
+              >
+            </td>
+          </template>
+        </v-data-table>
       </v-card>
     </v-col>
     <v-col cols="2">
@@ -15,10 +28,11 @@
         >Add new</v-btn
       >
       <v-btn class="mb-2" block @click="addDummyData">Add Dummy Data</v-btn>
-      <v-btn class="mb-2" block>Fixed Expenses</v-btn>
-      <v-btn class="mb-2" block>Other Expenses</v-btn>
-      <v-btn class="mb-2" block>Income</v-btn>
-      <v-btn class="mb-2" block>Savings</v-btn>
+      <v-btn class="mb-2" block @click="filterOnType('All')">Show all</v-btn>
+      <v-btn class="mb-2" block @click="filterOnType('Fixed Expenses')">Fixed Expenses</v-btn>
+      <v-btn class="mb-2" block @click="filterOnType('Other Expenses')">Other Expenses</v-btn>
+      <v-btn class="mb-2" block @click="filterOnType('Income')">Income</v-btn>
+      <v-btn class="mb-2" block @click="filterOnType('Savings')">Savings</v-btn>
       <v-card
         height="185"
         image="@/assets/Strawberries.jpg"
@@ -90,6 +104,8 @@
 <script lang="ts">
 import { useAppStore } from "@/stores/app";
 import { useGraphStore } from "@/stores/graphStore";
+import type { ITransaction } from "@/stores/interfaces/ITimeframe";
+import { get } from "node_modules/axios/index.cjs";
 import { Component, Vue, toNative } from "vue-facing-decorator";
 @Component
 class TableDisplay extends Vue {
@@ -101,6 +117,14 @@ class TableDisplay extends Vue {
   // the text field converts it to a string - and the calculation breaks if it is a string.
   // as such it gets defined here as a string but converted to a number before saving the amount.
   newTransactionAmount: string = "0";
+
+  headers = [
+    { title: "Date",key: "date", value: (item : ITransaction) => { return new Date(item.date).toLocaleDateString(); } },
+    { title: "Description", value: "description" },
+    { title: "Type", value: "type" },
+    { title: "Amount", key: "amount", value: (item: ITransaction) => { return 'R ' + (item.amount).toFixed(2)} },
+  ];
+  filterType = "";
 
   get appStore() {
     return useAppStore();
@@ -134,6 +158,27 @@ class TableDisplay extends Vue {
     this.graphStore.constructData()
     this.loadTableData = false;
     this.addNewTransactionModal = false;
+  }
+  filterOnType(type: string) {
+    if (type === 'All') {
+      this.filterType = '';
+    } else {
+      this.filterType = type;
+    }
+  }
+  getChipColor(type: string) {
+    switch (type) {
+      case "Fixed Expenses":
+        return "red";
+      case "Other Expenses":
+        return "blue";
+      case "Income":
+        return "green";
+      case "Savings":
+        return "orange";
+      default:
+        return "grey";
+    }
   }
 }
 export default toNative(TableDisplay);
