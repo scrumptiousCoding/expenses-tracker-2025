@@ -73,11 +73,12 @@ export const useAppStore = defineStore('app', {
       }
       return total
     },
-    addNewTimeframe(description: string, start: Date, end: Date) {
+    addNewTimeframe(description: string, start: Date, end: Date, startingBalance: number) {
       const newTf = {
         description: description,
         startDate: start,
         endDate: end,
+        startingBalance: startingBalance,
         id: this.timeframes.length,
         transaction: []
       }
@@ -93,12 +94,12 @@ export const useAppStore = defineStore('app', {
       for (let j = 0; j < 5; j++) {
         this.timeframes.push({
           
-    description: 'testing '+ j,
-    startDate: new Date,
-    endDate: new Date,
-    id: this.timeframes.length,
-
-    transaction: []
+          description: 'testing '+ j,
+          startDate: new Date,
+          endDate: new Date,
+          id: this.timeframes.length,
+          startingBalance: 1000,
+          transaction: []
 
         })
       }

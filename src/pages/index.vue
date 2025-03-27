@@ -20,12 +20,19 @@
           <apexchart v-if="graphStore.seriesData.length > 0" type="donut" :options="options" :series="graphStore.seriesData"></apexchart>
         </v-col>
         <v-col cols="4">
-          <v-card>
-            <v-card-text>
-              Notes
-              - this assumes that savings are in a seperate account and putting something in savings effectively removes it from your account
-            </v-card-text>
+          <v-card class="mb-3">
+            <div class="bookmark-right"></div>
+            <div class="card-border">
+              <v-card-text>
+                <p class="info-card-title">
+                  {{ selectedTimeframe.description }}
+                </p>
+                <h3>{{ new Date(selectedTimeframe.startDate).toLocaleDateString() }} - {{ new Date(selectedTimeframe.endDate).toLocaleDateString() }}</h3>
+              </v-card-text>
+            </div>
           </v-card>
+          <info-card title="Starting Amount" :amount="selectedTimeframe.startingBalance" />
+          <info-card title="Closing Amount" :amount="closingBalance" />
         </v-col>
         <v-col cols="12">
           <TableDisplay />
@@ -53,23 +60,25 @@ import { useGraphStore } from "@/stores/graphStore";
 class IndexPage extends Vue {
   options= {
         chart: {
-          id: 'vuechart-example'
+          id: 'expense-chart',
+          type: 'pie'
         },
-        pie: {
-          donut: {
-            labels: 
-            {
-              show: true,
-              name: {
-                show: true
-              },
-              value: {
-                show: true
-              }
-            }
-          }
+        theme: {
+          monochrome: {
+            color: '#e2c7f4',
+            enabled: true,
+          },
         },
-        labels: ['Fixed Expenses', 'Other Expenses', 'Savings']
+        legend: {
+          show: false,
+        },
+        labels: ['Fixed Expenses', 'Other Expenses', 'Savings'],
+        dataLabels: {
+          formatter(val: any, opts: any) {
+            const name = opts.w.globals.labels[opts.seriesIndex]
+            return [name, val.toFixed(2)]
+          },
+        },
       }
   mounted() {
     console.log("Main page mounted");
@@ -86,6 +95,13 @@ class IndexPage extends Vue {
 
   get selectedTimeframe() {
     return this.appStore.selectedTimeframe
+  }
+
+  get closingBalance() {
+    if (this.selectedTimeframe?.startingBalance === undefined) {
+      return 0
+    }
+    return this.selectedTimeframe?.startingBalance - this.appStore.calculateTotal('Other Expenses') - this.appStore.calculateTotal('Fixed Expenses') + this.appStore.calculateTotal('Income')
   }
 }
 export default toNative(IndexPage);

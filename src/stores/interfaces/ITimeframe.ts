@@ -1,5 +1,6 @@
 export interface ITimeframe {
     description: string
+    startingBalance: number
     startDate: Date
     endDate: Date
     id: number

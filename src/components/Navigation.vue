@@ -58,6 +58,14 @@
             class="flex-1-1-100"
             v-model="description"
           ></v-text-field>
+          <v-text-field
+            density="compact"
+            type="number"
+            variant="outlined"
+            label="Starting balance"
+            class="flex-1-1-100"
+            v-model="startingBalance"
+          ></v-text-field>
           <div class="flex-1-0 mr-1">
             <v-date-picker
               color="primary"
@@ -105,6 +113,7 @@ class NavigationComp extends Vue {
   endDate: Date = new Date();
   startDate: Date = new Date();
   description ="";
+  startingBalance: string = "0"
   
   get appStore() {
     return useAppStore()
@@ -140,7 +149,8 @@ class NavigationComp extends Vue {
       this.appStore.addNewTimeframe(
         this.description,
         this.startDate,
-        this.endDate
+        this.endDate,
+        parseFloat(this.startingBalance)
       );
       this.showNewTimeframeModal = false;
   }
