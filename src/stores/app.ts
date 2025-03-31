@@ -84,6 +84,13 @@ export const useAppStore = defineStore('app', {
       }
       this.timeframes.push(newTf)
     },
+    editTimeframe(description: string, startDate: Date, endDate: Date, startingBalance: number) {
+      if (!this.selectedTimeframe) return
+      this.selectedTimeframe.description= description
+      this.selectedTimeframe.startDate= startDate
+      this.selectedTimeframe.endDate= endDate
+      this.selectedTimeframe.startingBalance= startingBalance
+    },
     setSelectedTimeframe(tf: ITimeframe) {
       this.selectedTimeframe = tf
     },

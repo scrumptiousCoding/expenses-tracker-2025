@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Achievements: typeof import('./src/components/Achievements.vue')['default']
+    Goals: typeof import('./src/components/Goals.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     InfoCard: typeof import('./src/components/InfoCard.vue')['default']
     Navigation: typeof import('./src/components/Navigation.vue')['default']
@@ -15,5 +16,6 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     Statistics: typeof import('./src/components/Statistics.vue')['default']
     TableDisplay: typeof import('./src/components/TableDisplay.vue')['default']
+    TimeFrameModal: typeof import('./src/components/TimeFrameModal.vue')['default']
   }
 }

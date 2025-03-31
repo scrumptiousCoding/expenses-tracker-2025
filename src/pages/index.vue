@@ -24,10 +24,17 @@
             <div class="bookmark-right"></div>
             <div class="card-border">
               <v-card-text>
-                <p class="info-card-title">
-                  {{ selectedTimeframe.description }}
-                </p>
-                <h3>{{ new Date(selectedTimeframe.startDate).toLocaleDateString() }} - {{ new Date(selectedTimeframe.endDate).toLocaleDateString() }}</h3>
+                <v-row align="center" justify="center">
+                  <v-col cols="auto" class="pr-0">
+                    <v-btn variant="text" class="pa-0" density="compact" icon="mdi-pencil" @click="showModal()"></v-btn>
+                  </v-col>
+                  <v-col>
+                    <p class="info-card-title">
+                      {{ selectedTimeframe.description }}
+                    </p>
+                    <h3>{{ new Date(selectedTimeframe.startDate).toLocaleDateString() }} - {{ new Date(selectedTimeframe.endDate).toLocaleDateString() }}</h3>
+                  </v-col>
+                </v-row>
               </v-card-text>
             </div>
           </v-card>
@@ -39,12 +46,16 @@
         </v-col>
       </v-row>
     </div>
-
+    
+    <v-dialog v-model="showTimeFrameModal" width="800">
+      <time-frame-modal :newTimeFrame="false" @closeModal="showTimeFrameModal = false"/>
+    </v-dialog>
   </v-container>
 </template>
 <script lang="ts">
 import { Component, Vue, toNative } from "vue-facing-decorator";
 import NavigationComp from "@/components/Navigation.vue";
+import TimeFrameModal from "@/components/TimeFrameModal.vue";
 import { useAppStore } from "@/stores/app";
 import Statistics from "@/components/Statistics.vue";
 import TableDisplay from "@/components/TableDisplay.vue";
@@ -54,7 +65,8 @@ import { useGraphStore } from "@/stores/graphStore";
   components: {
     NavigationComp,
     Statistics,
-    TableDisplay
+    TableDisplay,
+    TimeFrameModal
   }
 })
 class IndexPage extends Vue {
@@ -80,6 +92,8 @@ class IndexPage extends Vue {
           },
         },
       }
+  showTimeFrameModal = false
+
   mounted() {
     console.log("Main page mounted");
     this.appStore.clearTimeframe()
@@ -102,6 +116,12 @@ class IndexPage extends Vue {
       return 0
     }
     return this.selectedTimeframe?.startingBalance - this.appStore.calculateTotal('Other Expenses') - this.appStore.calculateTotal('Fixed Expenses') + this.appStore.calculateTotal('Income')
+  }
+
+  showModal() {
+    console.log("show modal")
+    this.showTimeFrameModal = true
+    console.log(this.showTimeFrameModal)
   }
 }
 export default toNative(IndexPage);

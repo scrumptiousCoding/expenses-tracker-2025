@@ -20,7 +20,7 @@
         <div class="mx-2 align-self-center">
           <v-btn
             block
-            @click="openNewTimeframeModal"
+            @click="showNewTimeframeModal = true"
             variant="flat"
             color="secondary"
           >
@@ -48,72 +48,23 @@
   </v-card>
 
   <v-dialog v-model="showNewTimeframeModal" width="800">
-    <v-card prepend-icon="mdi-calendar-clock" title="Add new timeframe">
-      <v-card-text class="pb-0">
-        <v-form class="d-flex flex-wrap">
-          <v-text-field
-            density="compact"
-            variant="outlined"
-            label="Description"
-            class="flex-1-1-100"
-            v-model="description"
-          ></v-text-field>
-          <v-text-field
-            density="compact"
-            type="number"
-            variant="outlined"
-            label="Starting balance"
-            class="flex-1-1-100"
-            v-model="startingBalance"
-          ></v-text-field>
-          <div class="flex-1-0 mr-1">
-            <v-date-picker
-              color="primary"
-              width="100%"
-              v-model="startDate"
-            ></v-date-picker>
-          </div>
-          <div class="flex-1-0 ml-1">
-            <v-date-picker
-              color="primary"
-              width="100%"
-              v-model="endDate"
-            ></v-date-picker>
-          </div>
-        </v-form>
-      </v-card-text>
-      <v-card-actions class="mb-3">
-        <v-btn
-          class="mr2"
-          text="Cancel"
-          variant="outlined"
-          color="error"
-          @click="showNewTimeframeModal = false"
-        ></v-btn>
-        <v-btn
-          class="mr-3"
-          text="Ok"
-          variant="flat"
-          color="primary"
-          @click="addNewTimeframe"
-        ></v-btn>
-      </v-card-actions>
-    </v-card>
+    <time-frame-modal :newTimeFrame="true" @closeModal="showNewTimeframeModal = false"/>
   </v-dialog>
 </template>
 <script lang="ts">
 import { useAppStore } from "@/stores/app";
 import { useGraphStore } from "@/stores/graphStore";
 import { Component, Vue, toNative } from "vue-facing-decorator";
-@Component
+import TimeFrameModal from "@/components/TimeFrameModal.vue";
+@Component({
+  components: {
+    TimeFrameModal
+  }
+})
 class NavigationComp extends Vue {
   tfOpt = null
 
   showNewTimeframeModal = false;
-  endDate: Date = new Date();
-  startDate: Date = new Date();
-  description ="";
-  startingBalance: string = "0"
   
   get appStore() {
     return useAppStore()
@@ -126,12 +77,6 @@ class NavigationComp extends Vue {
     return this.appStore.timeframes
   }
 
-  openNewTimeframeModal() {
-    this.showNewTimeframeModal = true
-    this.startDate = new Date();
-    this.endDate = new Date();
-    this.description = "";
-  }
   changeTimeframe() {
     if (this.tfOpt !== null) {
       this.appStore.setSelectedTimeframe(this.tfOpt)
@@ -144,15 +89,6 @@ class NavigationComp extends Vue {
   }
   addDummyData() {
     this.appStore.addDummyTimeframe()
-  }
-  addNewTimeframe() {
-      this.appStore.addNewTimeframe(
-        this.description,
-        this.startDate,
-        this.endDate,
-        parseFloat(this.startingBalance)
-      );
-      this.showNewTimeframeModal = false;
   }
 }
 export default toNative(NavigationComp);
