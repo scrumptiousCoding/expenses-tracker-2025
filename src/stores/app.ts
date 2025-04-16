@@ -7,13 +7,15 @@ export interface ISystemStore {
   timeframes: ITimeframe[]
   selectedTimeframe: ITimeframe | null,
   transactionTypes: string[]
+  firstLoad: boolean
 }
 
 export const useAppStore = defineStore('app', {
   state: (): ISystemStore => ({
     timeframes: [],
     selectedTimeframe: null,
-    transactionTypes: ["Income", "Fixed Expenses", "Other Expenses", "Savings"]
+    transactionTypes: ["Income", "Fixed Expenses", "Other Expenses", "Savings"],
+    firstLoad: true,
   }),
   getters: {
     getTotalIncome(state){

@@ -35,7 +35,7 @@
       <v-btn class="mb-2" block @click="filterOnType('Savings')">Savings</v-btn>
       <v-card
         height="185"
-        image="@/assets/Strawberries.jpg"
+        image="@/assets/pumpkinTheme/pumpkinBack.jpg"
         class="mb-3"
       ></v-card>
     </v-col>

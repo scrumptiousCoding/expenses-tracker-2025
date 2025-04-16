@@ -17,7 +17,7 @@
         </v-col>
         <v-col cols="4"> 
           <div v-if="graphStore.seriesData.length <= 0">nothing here yet</div>
-          <apexchart v-if="graphStore.seriesData.length > 0" type="donut" :options="options" :series="graphStore.seriesData"></apexchart>
+          <apexchart v-if="graphStore.seriesData.length > 0" type="pie" :options="options" :series="graphStore.seriesData"></apexchart>
         </v-col>
         <v-col cols="4">
           <v-card class="mb-3">
@@ -77,7 +77,7 @@ class IndexPage extends Vue {
         },
         theme: {
           monochrome: {
-            color: '#e2c7f4',
+            color: '#e7b083',
             enabled: true,
           },
         },

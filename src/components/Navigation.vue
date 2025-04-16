@@ -1,7 +1,52 @@
 <template>
+  <v-navigation-drawer v-model="drawer" temporary>
+    <v-divider></v-divider>
+
+    <v-list density="compact" nav>
+      <v-list-item
+        prepend-icon="mdi-bulletin-board"
+        title="Notice"
+        @click="showNoticeModal = !showNoticeModal"
+      ></v-list-item>
+      <v-list-item
+        prepend-icon="mdi-view-dashboard"
+        title="Theme"
+        value="home"
+      ></v-list-item>
+      <v-list-item
+        prepend-icon="mdi-view-dashboard"
+        title="Import data"
+        value="home"
+      ></v-list-item>
+      <v-list-item
+        prepend-icon="mdi-view-dashboard"
+        title="Export data"
+        value="home"
+      ></v-list-item>
+      <v-list-item
+        prepend-icon="mdi-view-dashboard"
+        title="Release Notes"
+        value="home"
+      ></v-list-item>
+    </v-list>
+
+    <v-divider></v-divider>
+
+    <v-list-item> Copyright © 2025 </v-list-item>
+  </v-navigation-drawer>
   <v-card>
     <div class="card-border">
       <v-card-text class="d-flex flex-wrap">
+        <div class="mx-2 align-self-center">
+          <v-btn
+            block
+            @click="drawer = !drawer"
+            variant="flat"
+            icon="mdi-menu"
+            size="small"
+          >
+          </v-btn>
+        </div>
         <div class="flex-1-0">
           <v-select
             v-model="tfOpt"
@@ -30,7 +75,12 @@
         <div class="align-self-center">
           <v-menu location="bottom">
             <template v-slot:activator="{ props }">
-              <v-btn variant="text" density="comfortable" icon="mdi-cog" v-bind="props"></v-btn>
+              <v-btn
+                variant="text"
+                density="comfortable"
+                icon="mdi-cog"
+                v-bind="props"
+              ></v-btn>
             </template>
 
             <v-list>
@@ -48,7 +98,45 @@
   </v-card>
 
   <v-dialog v-model="showNewTimeframeModal" width="800">
-    <time-frame-modal :newTimeFrame="true" @closeModal="showNewTimeframeModal = false"/>
+    <time-frame-modal
+      :newTimeFrame="true"
+      @closeModal="showNewTimeframeModal = false"
+    />
+  </v-dialog>
+
+  <v-dialog
+    v-model="showNoticeModal"
+    width="500"
+    @after-leave="closeNoticeModal()"
+  >
+    <v-card>
+      <v-card-title>
+        <div class="ribbon-corner"></div>
+        <div class="ribbon-corner-secondary"></div>
+        <h1>{{!appStore.firstLoad ? 'Hi there!' : 'Welcome'}}</h1>
+      </v-card-title>
+      <v-card
+        class="sticky-note">
+        <v-card-title
+          class="sticky-note-title">
+          Notes
+        </v-card-title>
+        <v-card-text class="pt-2">
+          <v-timeline side="end">
+            <v-timeline-item
+              size="x-small"
+              v-for="(note, index) in notes"
+              :key="index"
+              color="secondary"
+              fill-dot
+            >
+              <span class="font-weight-bold">{{ note.title }}</span>
+              {{ note.description }}
+            </v-timeline-item>
+          </v-timeline>
+        </v-card-text>
+      </v-card>
+    </v-card>
   </v-dialog>
 </template>
 <script lang="ts">
@@ -58,37 +146,64 @@ import { Component, Vue, toNative } from "vue-facing-decorator";
 import TimeFrameModal from "@/components/TimeFrameModal.vue";
 @Component({
   components: {
-    TimeFrameModal
-  }
+    TimeFrameModal,
+  },
 })
 class NavigationComp extends Vue {
-  tfOpt = null
+  tfOpt = null;
 
   showNewTimeframeModal = false;
-  
+  drawer = false;
+  showNoticeModal = false;
+  notes = [
+    {
+      title: "No accounts needed.",
+      description: "Everything is stored on the device you are working on",
+    },
+    {
+      title: "We love feedback.",
+      description:
+        "Feel free to reach out and tell us what you like or would like to see!",
+    },
+    {
+      title: "(Coming soon) Keep your data save.",
+      description: "Export your data and import it to other devices",
+    },
+  ];
+
   get appStore() {
-    return useAppStore()
+    return useAppStore();
   }
-  
+
   get graphStore() {
-    return useGraphStore()
+    return useGraphStore();
   }
+
   get timeFrameOptions() {
-    return this.appStore.timeframes
+    return this.appStore.timeframes;
+  }
+
+  mounted() {
+    this.showNoticeModal = this.appStore.firstLoad;
+  }
+
+  closeNoticeModal() {
+    this.showNoticeModal = false;
+    this.appStore.firstLoad = false;
   }
 
   changeTimeframe() {
     if (this.tfOpt !== null) {
-      this.appStore.setSelectedTimeframe(this.tfOpt)
-      this.graphStore.constructData()
+      this.appStore.setSelectedTimeframe(this.tfOpt);
+      this.graphStore.constructData();
     }
   }
   deselectTimeframe() {
-    this.appStore.clearTimeframe()
-    this.tfOpt = null
+    this.appStore.clearTimeframe();
+    this.tfOpt = null;
   }
   addDummyData() {
-    this.appStore.addDummyTimeframe()
+    this.appStore.addDummyTimeframe();
   }
 }
 export default toNative(NavigationComp);

@@ -11,21 +11,21 @@ import 'vuetify/styles'
 // Composables
 import { createVuetify, type ThemeDefinition } from 'vuetify'
 
-const thePastels: ThemeDefinition = {
+const pumpkinTheme: ThemeDefinition = {
   dark: false,
   colors: {
     background: '#f8fafa',
     surface: '#FFFFFF',
     'surface-bright': '#FFFFFF',
     'surface-light': '#EEEEEE',
-    'surface-variant': '#e2c7f4',
+    'surface-variant': '#e7b083',
     'on-surface-variant': '#f4eef8',
-    primary: '#e2c7f4',
+    primary: '#e7b083',
     'primary-darken-1': '#cea4eb',
-    secondary: '#c3f5f6',
+    secondary: '#f1d8c4',
     'secondary-darken-1': '#90ebec',
     error: '#e75c5c',
-    info: '#c3f5f6',
+    info: '#f1d8c4',
     success: '#c1fdb9',
     warning: '#fcd29e',
   },
@@ -52,9 +52,9 @@ const thePastels: ThemeDefinition = {
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
   theme: {
-    defaultTheme: 'thePastels',
+    defaultTheme: 'pumpkinTheme',
     themes: {
-      thePastels
+      pumpkinTheme
     },
   },
 })
