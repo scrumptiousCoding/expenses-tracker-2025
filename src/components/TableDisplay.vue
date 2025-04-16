@@ -1,5 +1,40 @@
 <template>
   <v-row>
+    <v-col cols="2">
+      <v-card class="mt-0 mb-3 sticky-note">
+        <v-card-title class="sticky-note-title mb-2">
+          History Breakdown
+        </v-card-title>
+        <v-card-text>
+          <v-text-field
+            density="compact"
+            variant="outlined"
+            label="Search"
+            hide-details="auto"
+            class="flex-1-1-100 mb-2"
+            clearable
+            v-model="filterType"
+          ></v-text-field>
+          <v-btn class="mb-2" block @click="addNewTransaction()">Add new</v-btn>
+          <v-btn class="mb-2" block @click="addDummyData">Add Dummy Data</v-btn>
+          <v-btn class="mb-2" block @click="filterOnType('All')"
+            >Show all</v-btn
+          >
+          <v-btn class="mb-2" block @click="filterOnType('Fixed Expenses')"
+            >Fixed Expenses</v-btn
+          >
+          <v-btn class="mb-2" block @click="filterOnType('Other Expenses')"
+            >Other Expenses</v-btn
+          >
+          <v-btn class="mb-2" block @click="filterOnType('Income')"
+            >Income</v-btn
+          >
+          <v-btn class="mb-2" block @click="filterOnType('Savings')"
+            >Savings</v-btn
+          >
+        </v-card-text>
+      </v-card>
+    </v-col>
     <v-col cols="10">
       <v-card>
         <v-data-table
@@ -13,31 +48,24 @@
         >
           <template v-slot:item.type="{ item }">
             <td>
-              <v-chip
-                :color="getChipColor(item.type)"
-                size="small"
-                >{{ item.type }}</v-chip
-              >
+              <v-chip :color="getChipColor(item.type)" size="small">{{
+                item.type
+              }}</v-chip>
+            </td>
+          </template>
+          <template v-slot:item.actions="{ item }">
+            <td class="d-flex justify-end">
+              <v-btn
+                size="x-small"
+                @click="editItem(item)"
+                variant="flat"
+                icon="mdi-pencil"
+              ></v-btn>
+              <v-btn size="x-small">Delete</v-btn>
             </td>
           </template>
         </v-data-table>
       </v-card>
-    </v-col>
-    <v-col cols="2">
-      <v-btn class="mb-2" block @click="addNewTransactionModal = !addNewTransactionModal"
-        >Add new</v-btn
-      >
-      <v-btn class="mb-2" block @click="addDummyData">Add Dummy Data</v-btn>
-      <v-btn class="mb-2" block @click="filterOnType('All')">Show all</v-btn>
-      <v-btn class="mb-2" block @click="filterOnType('Fixed Expenses')">Fixed Expenses</v-btn>
-      <v-btn class="mb-2" block @click="filterOnType('Other Expenses')">Other Expenses</v-btn>
-      <v-btn class="mb-2" block @click="filterOnType('Income')">Income</v-btn>
-      <v-btn class="mb-2" block @click="filterOnType('Savings')">Savings</v-btn>
-      <v-card
-        height="185"
-        image="@/assets/pumpkinTheme/pumpkinBack.jpg"
-        class="mb-3"
-      ></v-card>
     </v-col>
   </v-row>
 
@@ -51,7 +79,7 @@
             label="Description"
             hide-details="auto"
             class="flex-1-1-100"
-            v-model="newTransactionDescription"
+            v-model="transactionDescription"
           ></v-text-field>
           <v-text-field
             density="compact"
@@ -60,11 +88,11 @@
             type="number"
             hide-details="auto"
             class="mt-2 flex-1-1-100"
-            v-model="newTransactionAmount"
+            v-model="transactionAmount"
           ></v-text-field>
 
           <v-select
-            v-model="newTransactionType"
+            v-model="transactionType"
             :items="appStore.transactionTypes"
             class="mt-2 flex-1-1-100"
             variant="outlined"
@@ -74,7 +102,7 @@
             single-line
           ></v-select>
           <v-alert
-            v-if="newTransactionType === 'Savings'"
+            v-if="transactionType === 'Savings'"
             class="mt-2"
             color="info"
             density="compact"
@@ -85,7 +113,7 @@
             class="mt-2"
             color="primary"
             width="100%"
-            v-model="newTransactionDate"
+            v-model="transactionDate"
           ></v-date-picker>
         </v-form>
       </v-card-text>
@@ -102,7 +130,7 @@
           text="Ok"
           variant="flat"
           color="primary"
-          @click="addNewTransaction"
+          @click="updateTransaction"
         ></v-btn>
       </v-card-actions>
     </v-card>
@@ -112,24 +140,38 @@
 import { useAppStore } from "@/stores/app";
 import { useGraphStore } from "@/stores/graphStore";
 import type { ITransaction } from "@/stores/interfaces/ITimeframe";
-import { get } from "node_modules/axios/index.cjs";
 import { Component, Vue, toNative } from "vue-facing-decorator";
 @Component
 class TableDisplay extends Vue {
   loadTableData: boolean = false;
   addNewTransactionModal: boolean = false;
-  newTransactionDescription: string = "";
-  newTransactionDate: Date = new Date();
-  newTransactionType: string = "Other Expenses";
+  transactionId: number = -1;
+  transactionDescription: string = "";
+  transactionDate: Date = new Date();
+  transactionType: string = "Other Expenses";
   // the text field converts it to a string - and the calculation breaks if it is a string.
   // as such it gets defined here as a string but converted to a number before saving the amount.
-  newTransactionAmount: string = "0";
+  transactionAmount: string = "0";
+  filterValue: string = "";
 
   headers = [
-    { title: "Date",key: "date", value: (item : ITransaction) => { return new Date(item.date).toLocaleDateString(); } },
+    {
+      title: "Date",
+      key: "date",
+      value: (item: ITransaction) => {
+        return new Date(item.date).toLocaleDateString();
+      },
+    },
     { title: "Description", value: "description" },
     { title: "Type", value: "type" },
-    { title: "Amount", key: "amount", value: (item: ITransaction) => { return 'R ' + (item.amount).toFixed(2)} },
+    {
+      title: "Amount",
+      key: "amount",
+      value: (item: ITransaction) => {
+        return "R " + item.amount.toFixed(2);
+      },
+    },
+    { title: "", key: "actions", align: "end" },
   ];
   filterType = "";
 
@@ -139,36 +181,57 @@ class TableDisplay extends Vue {
   get graphStore() {
     return useGraphStore();
   }
-
   get selectedTimeframe() {
     return this.appStore.selectedTimeframe;
   }
-
+  addNewTransaction() {
+    this.transactionAmount = "0";
+    this.transactionDescription = "";
+    this.transactionDate = new Date();
+    this.transactionType = "Other Expenses";
+    this.addNewTransactionModal = true;
+    this.transactionId = -1;
+  }
+  editItem(item: any) {
+    this.transactionAmount = item.amount.toString();
+    this.transactionDescription = item.description;
+    this.transactionDate = new Date(item.date);
+    this.transactionType = item.type;
+    this.transactionId = item.id;
+    this.addNewTransactionModal = true;
+  }
   addDummyData() {
-    this.loadTableData = true;
     this.appStore.addDummyData();
-    this.graphStore.constructData()
+    this.updateTable();
+  }
+  updateTable() {
+    this.loadTableData = true;
+    this.graphStore.constructData();
     this.loadTableData = false;
   }
-  addNewTransaction() {
-    this.loadTableData = true;
-    this.appStore.addNewTransaction(
-      this.newTransactionDescription,
-      this.newTransactionDate,
-      parseFloat(this.newTransactionAmount),
-      this.newTransactionType
-    );
-    this.newTransactionDescription = "";
-    this.newTransactionDate = new Date();
-    this.newTransactionType = "Other Expenses";
-    this.newTransactionAmount = "0";
-    this.graphStore.constructData()
-    this.loadTableData = false;
+  updateTransaction() {
+    if (this.transactionId == -1) {
+      this.appStore.addNewTransaction(
+        this.transactionDescription,
+        this.transactionDate,
+        parseFloat(this.transactionAmount),
+        this.transactionType
+      );
+    } else {
+      this.appStore.updateTransaction(
+        this.transactionId,
+        this.transactionDescription,
+        this.transactionDate,
+        parseFloat(this.transactionAmount),
+        this.transactionType
+      );
+    }
+    this.updateTable();
     this.addNewTransactionModal = false;
   }
   filterOnType(type: string) {
-    if (type === 'All') {
-      this.filterType = '';
+    if (type === "All") {
+      this.filterType = "";
     } else {
       this.filterType = type;
     }

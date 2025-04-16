@@ -136,6 +136,17 @@ export const useAppStore = defineStore('app', {
           id: this.selectedTimeframe.transaction.length
         }
       )
+    },
+    updateTransaction(id: number, description: string, date: Date, amount: number, type: string){
+      if (this.selectedTimeframe) {
+        const transaction = this.selectedTimeframe.transaction.find((x) => x.id === id)
+        if (transaction) {
+          transaction.description = description
+          transaction.date = date
+          transaction.amount = amount
+          transaction.type = type
+        }
+      }
     }
   },
   persist: true
