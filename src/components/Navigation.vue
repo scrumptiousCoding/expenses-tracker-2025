@@ -16,22 +16,19 @@
       <v-list-item
         prepend-icon="mdi-view-dashboard"
         title="Theme"
-        value="home"
       ></v-list-item>
       <v-list-item
         prepend-icon="mdi-view-dashboard"
         title="Import data"
-        value="home"
       ></v-list-item>
       <v-list-item
         prepend-icon="mdi-view-dashboard"
         title="Export data"
-        value="home"
       ></v-list-item>
       <v-list-item
-        prepend-icon="mdi-view-dashboard"
+        prepend-icon="mdi-book-open-page-variant-outline"
         title="Release Notes"
-        value="home"
+        @click="showReleaseNotesModal = !showReleaseNotesModal"
       ></v-list-item>
     </v-list>
 
@@ -147,6 +144,10 @@
     <settings-modal 
     @closeModal="showSettingsModal = false"/>
   </v-dialog>
+  <v-dialog v-model="showReleaseNotesModal" width="500" >
+    <release-notes-modal 
+    @closeModal="showSettingsModal = false"/>
+  </v-dialog>
 </template>
 <script lang="ts">
 import { useAppStore } from "@/stores/app";
@@ -154,22 +155,25 @@ import { useGraphStore } from "@/stores/graphStore";
 import { Component, Vue, toNative } from "vue-facing-decorator";
 import TimeFrameModal from "@/components/TimeFrameModal.vue";
 import SettingsModal from "@/components/SettingsModal.vue";
+import ReleaseNotesModal from "@/components/ReleaseNotesModal.vue";
 @Component({
   components: {
     TimeFrameModal,
-    SettingsModal
+    SettingsModal,
+    ReleaseNotesModal
   },
 })
 class NavigationComp extends Vue {
   tfOpt = null;
   showNewTimeframeModal = false;
   showSettingsModal = false;
+  showReleaseNotesModal = false;
   drawer = false;
   showNoticeModal = false;
   notes = [
     {
-      title: "No accounts needed.",
-      description: "Everything is stored on the device you are working on",
+      title: "No account needed.",
+      description: "Everything is stored on the device you are working on.",
     },
     {
       title: "Not your currency?",
@@ -183,7 +187,7 @@ class NavigationComp extends Vue {
     },
     {
       title: "(Coming soon) Keep your data save.",
-      description: "Export your data and import it to other devices",
+      description: "Export your data and import it to other devices.",
     },
   ];
 

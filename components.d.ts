@@ -11,6 +11,8 @@ declare module 'vue' {
     Goals: typeof import('./src/components/Goals.vue')['default']
     InfoCard: typeof import('./src/components/InfoCard.vue')['default']
     Navigation: typeof import('./src/components/Navigation.vue')['default']
+    ReleaseNotes: typeof import('./src/components/ReleaseNotes.vue')['default']
+    ReleaseNotesModal: typeof import('./src/components/ReleaseNotesModal.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SettingsModal: typeof import('./src/components/SettingsModal.vue')['default']
