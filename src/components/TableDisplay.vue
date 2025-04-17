@@ -151,8 +151,8 @@
             color="primary"
             width="100%"
             v-model="transactionDate"
-            :min="new Date(selectedTimeframe.startDate).toLocaleDateString().split('T')[0]"
-            :max="new Date(selectedTimeframe.endDate).toLocaleDateString().split('T')[0]"
+            :min="minDate"
+            :max="maxDate"
           ></v-date-picker>
         </v-form>
       </v-card-text>
@@ -242,9 +242,11 @@ class TableDisplay extends Vue {
         return this.settingsStore.currencyFormatting(item.amount);
       },
     },
-    { title: "", key: "actions", align: "end" },
+    { title: "", key: "actions"},
   ];
   filterType = "";
+  minDate: string = '';
+  maxDate: string = '';
 
   get appStore() {
     return useAppStore();
@@ -257,6 +259,12 @@ class TableDisplay extends Vue {
   }
   get selectedTimeframe() {
     return this.appStore.selectedTimeframe;
+  }
+  mounted() {
+    if (this.selectedTimeframe !== null) {
+      this.minDate = new Date(this.selectedTimeframe.startDate).toLocaleDateString().split('T')[0]
+      this.maxDate = new Date(this.selectedTimeframe.endDate).toLocaleDateString().split('T')[0]
+    }
   }
   confirmDeleteTransaction(item: ITransaction) {
     this.transactionDescription = item.description;

@@ -119,9 +119,7 @@ class IndexPage extends Vue {
   }
 
   showModal() {
-    console.log("show modal")
     this.showTimeFrameModal = true
-    console.log(this.showTimeFrameModal)
   }
 }
 export default toNative(IndexPage);

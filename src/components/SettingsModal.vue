@@ -16,8 +16,9 @@
                 :items="settingsStore.countryLocaleList"
                 item-title="countryName"
                 :return-object="true"
-                @update:modelValue="selectCountry"
             ></v-select>
+            
+            <!-- @update:modelValue="selectCountry" -->
         </v-card-text>
       </v-card>
       </v-card-text>

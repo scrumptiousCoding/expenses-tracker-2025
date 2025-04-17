@@ -9,7 +9,6 @@ declare module 'vue' {
   export interface GlobalComponents {
     Achievements: typeof import('./src/components/Achievements.vue')['default']
     Goals: typeof import('./src/components/Goals.vue')['default']
-    HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     InfoCard: typeof import('./src/components/InfoCard.vue')['default']
     Navigation: typeof import('./src/components/Navigation.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
