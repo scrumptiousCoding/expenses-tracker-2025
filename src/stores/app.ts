@@ -93,6 +93,15 @@ export const useAppStore = defineStore('app', {
       this.selectedTimeframe.endDate= endDate
       this.selectedTimeframe.startingBalance= startingBalance
     },
+    deleteTransaction(id: number) {
+      let indexedItem = this.selectedTimeframe?.transaction.findIndex((x) => x.id === id)
+      if (indexedItem !== undefined) {
+        this.selectedTimeframe?.transaction.splice(indexedItem, 1)
+      } 
+      else {
+        //TODO: add error handling
+      }
+    },
     setSelectedTimeframe(tf: ITimeframe) {
       this.selectedTimeframe = tf
     },

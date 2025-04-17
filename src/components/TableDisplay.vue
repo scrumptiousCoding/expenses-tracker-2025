@@ -15,13 +15,52 @@
             clearable
             v-model="filterType"
           ></v-text-field>
-          <v-btn class="mb-2" block @click="addNewTransaction()">Add new</v-btn>
-          <v-btn class="mb-2" block @click="addDummyData">Add Dummy Data</v-btn>
-          <v-btn class="mb-2" block @click="filterOnType('All')" :color="filterType === '' ? 'primary' : ''">Show all</v-btn>
-          <v-btn class="mb-2" block @click="filterOnType('Fixed Expenses')" :color="filterType === 'Fixed Expenses' ? 'primary' : ''"> Fixed Expenses </v-btn>
-          <v-btn class="mb-2" block @click="filterOnType('Other Expenses')" :color="filterType === 'Other Expenses' ? 'primary' : ''"> Other Expenses </v-btn>
-          <v-btn class="mb-2" block @click="filterOnType('Income')" :color="filterType === 'Income' ? 'primary' : ''"> Income </v-btn>
-          <v-btn class="mb-2" block @click="filterOnType('Savings')" :color="filterType === 'Savings' ? 'primary' : ''"> Savings </v-btn>
+          <v-btn class="mb-2" block @click="addNewTransaction()">
+            Add new
+          </v-btn>
+          <v-btn class="mb-2" block @click="addDummyData"> 
+            Add Dummy Data
+          </v-btn>
+          <v-btn
+            class="mb-2"
+            block
+            @click="filterOnType('All')"
+            :color="filterType === '' ? 'primary' : ''"
+            > 
+            Show all 
+          </v-btn>
+          <v-btn
+            class="mb-2"
+            block
+            @click="filterOnType('Fixed Expenses')"
+            :color="filterType === 'Fixed Expenses' ? 'primary' : ''"
+          >
+            Fixed Expenses
+          </v-btn>
+          <v-btn
+            class="mb-2"
+            block
+            @click="filterOnType('Other Expenses')"
+            :color="filterType === 'Other Expenses' ? 'primary' : ''"
+          >
+            Other Expenses
+          </v-btn>
+          <v-btn
+            class="mb-2"
+            block
+            @click="filterOnType('Income')"
+            :color="filterType === 'Income' ? 'primary' : ''"
+          >
+            Income
+          </v-btn>
+          <v-btn
+            class="mb-2"
+            block
+            @click="filterOnType('Savings')"
+            :color="filterType === 'Savings' ? 'primary' : ''"
+          >
+            Savings
+          </v-btn>
         </v-card-text>
       </v-card>
     </v-col>
@@ -38,9 +77,9 @@
         >
           <template v-slot:item.type="{ item }">
             <td>
-              <v-chip :color="getChipColor(item.type)" size="small">{{
-                item.type
-              }}</v-chip>
+              <v-chip :color="getChipColor(item.type)" size="small">
+                {{ item.type }} 
+              </v-chip>
             </td>
           </template>
           <template v-slot:item.actions="{ item }">
@@ -51,7 +90,12 @@
                 variant="flat"
                 icon="mdi-pencil"
               ></v-btn>
-              <v-btn size="x-small">Delete</v-btn>
+              <v-btn
+                size="x-small"
+                @click="confirmDeleteTransaction(item)"
+                icon="mdi-trash-can"
+                variant="flat"
+              ></v-btn>
             </td>
           </template>
         </v-data-table>
@@ -60,7 +104,10 @@
   </v-row>
 
   <v-dialog v-model="addNewTransactionModal" width="600">
-    <v-card prepend-icon="mdi-calendar-clock" title="Add new transaction">
+    <v-card
+      prepend-icon="mdi-calendar-clock"
+      :title="transactionId === -1 ? 'Add new transaction' : 'Edit transaction'"
+    >
       <v-card-text class="pb-0">
         <v-form class="d-flex flex-wrap">
           <v-text-field
@@ -104,6 +151,8 @@
             color="primary"
             width="100%"
             v-model="transactionDate"
+            :min="new Date(selectedTimeframe.startDate).toLocaleDateString().split('T')[0]"
+            :max="new Date(selectedTimeframe.endDate).toLocaleDateString().split('T')[0]"
           ></v-date-picker>
         </v-form>
       </v-card-text>
@@ -121,6 +170,36 @@
           variant="flat"
           color="primary"
           @click="updateTransaction"
+        ></v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
+  <v-dialog v-model="deleteTransactionModal" width="400">
+    <v-card prepend-icon="mdi-calendar-clock" title="Delete transaction">
+      <v-card-text class="pb-0">
+        <p>
+          Are you sure you want to delete
+          <span class="font-weight-bold">{{ transactionDescription }}</span>
+          with a total of
+          <span class="font-weight-bold">R {{ transactionAmount }}</span
+          >?
+        </p>
+      </v-card-text>
+      <v-card-actions class="mb-3">
+        <v-btn
+          class="mr-2"
+          text="Cancel"
+          variant="outlined"
+          color="error"
+          @click="deleteTransactionModal = false"
+        ></v-btn>
+        <v-btn
+          class="mr-3"
+          text="Ok"
+          variant="flat"
+          color="primary"
+          @click="deleteTransaction"
         ></v-btn>
       </v-card-actions>
     </v-card>
@@ -143,6 +222,7 @@ class TableDisplay extends Vue {
   // as such it gets defined here as a string but converted to a number before saving the amount.
   transactionAmount: string = "0";
   filterValue: string = "";
+  deleteTransactionModal: boolean = false;
 
   headers = [
     {
@@ -174,6 +254,17 @@ class TableDisplay extends Vue {
   get selectedTimeframe() {
     return this.appStore.selectedTimeframe;
   }
+  confirmDeleteTransaction(item: ITransaction) {
+    this.transactionDescription = item.description;
+    this.transactionAmount = item.amount.toString();
+    this.transactionId = item.id;
+    this.deleteTransactionModal = true;
+  }
+  deleteTransaction() {
+    this.appStore.deleteTransaction(this.transactionId);
+    this.updateTable();
+    this.deleteTransactionModal = false;
+  }
   addNewTransaction() {
     this.transactionAmount = "0";
     this.transactionDescription = "";
@@ -182,7 +273,7 @@ class TableDisplay extends Vue {
     this.addNewTransactionModal = true;
     this.transactionId = -1;
   }
-  editItem(item: any) {
+  editItem(item: ITransaction) {
     this.transactionAmount = item.amount.toString();
     this.transactionDescription = item.description;
     this.transactionDate = new Date(item.date);

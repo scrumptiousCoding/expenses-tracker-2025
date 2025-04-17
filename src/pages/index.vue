@@ -32,7 +32,7 @@
                     <p class="info-card-title">
                       {{ selectedTimeframe.description }}
                     </p>
-                    <h3>{{ new Date(selectedTimeframe.startDate).toLocaleDateString() }} - {{ new Date(selectedTimeframe.endDate).toLocaleDateString() }}</h3>
+                    <h3>{{ new Date(selectedTimeframe?.startDate).toLocaleDateString() }} - {{ new Date(selectedTimeframe.endDate).toLocaleDateString() }}</h3>
                   </v-col>
                 </v-row>
               </v-card-text>
