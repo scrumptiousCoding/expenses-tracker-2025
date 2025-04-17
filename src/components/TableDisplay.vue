@@ -156,7 +156,7 @@
           ></v-date-picker>
         </v-form>
       </v-card-text>
-      <v-card-actions class="mb-3">
+      <v-card-actions class="mb-3 mx-1">
         <v-btn
           class="mr-2"
           text="Cancel"
@@ -186,7 +186,7 @@
           >?
         </p>
       </v-card-text>
-      <v-card-actions class="mb-3">
+      <v-card-actions class="mb-3 mx-1">
         <v-btn
           class="mr-2"
           text="Cancel"

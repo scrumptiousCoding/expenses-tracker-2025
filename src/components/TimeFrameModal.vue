@@ -33,7 +33,7 @@
             </div>
           </v-form>
         </v-card-text>
-        <v-card-actions class="mb-3">
+        <v-card-actions class="mb-3 mx-1">
           <v-btn
             class="mr2"
             text="Cancel"
