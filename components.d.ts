@@ -14,6 +14,7 @@ declare module 'vue' {
     Navigation: typeof import('./src/components/Navigation.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SettingsModal: typeof import('./src/components/SettingsModal.vue')['default']
     Statistics: typeof import('./src/components/Statistics.vue')['default']
     TableDisplay: typeof import('./src/components/TableDisplay.vue')['default']
     TimeFrameModal: typeof import('./src/components/TimeFrameModal.vue')['default']

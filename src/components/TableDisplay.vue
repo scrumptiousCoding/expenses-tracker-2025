@@ -208,6 +208,7 @@
 <script lang="ts">
 import { useAppStore } from "@/stores/app";
 import { useGraphStore } from "@/stores/graphStore";
+import { useSettingsStore } from "@/stores/settingsStore";
 import type { ITransaction } from "@/stores/interfaces/ITimeframe";
 import { Component, Vue, toNative } from "vue-facing-decorator";
 @Component
@@ -238,7 +239,7 @@ class TableDisplay extends Vue {
       title: "Amount",
       key: "amount",
       value: (item: ITransaction) => {
-        return "R " + item.amount.toFixed(2);
+        return this.settingsStore.currencyFormatting(item.amount);
       },
     },
     { title: "", key: "actions", align: "end" },
@@ -250,6 +251,9 @@ class TableDisplay extends Vue {
   }
   get graphStore() {
     return useGraphStore();
+  }
+  get settingsStore() {
+    return useSettingsStore()
   }
   get selectedTimeframe() {
     return this.appStore.selectedTimeframe;

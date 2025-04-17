@@ -9,6 +9,11 @@
         @click="showNoticeModal = !showNoticeModal"
       ></v-list-item>
       <v-list-item
+        prepend-icon="mdi-cog"
+        title="Settings"
+        @click="showSettingsModal = !showSettingsModal"
+      ></v-list-item>
+      <v-list-item
         prepend-icon="mdi-view-dashboard"
         title="Theme"
         value="home"
@@ -138,27 +143,38 @@
       </v-card>
     </v-card>
   </v-dialog>
+  <v-dialog v-model="showSettingsModal" width="800" >
+    <settings-modal 
+    @closeModal="showSettingsModal = false"/>
+  </v-dialog>
 </template>
 <script lang="ts">
 import { useAppStore } from "@/stores/app";
 import { useGraphStore } from "@/stores/graphStore";
 import { Component, Vue, toNative } from "vue-facing-decorator";
 import TimeFrameModal from "@/components/TimeFrameModal.vue";
+import SettingsModal from "@/components/SettingsModal.vue";
 @Component({
   components: {
     TimeFrameModal,
+    SettingsModal
   },
 })
 class NavigationComp extends Vue {
   tfOpt = null;
-
   showNewTimeframeModal = false;
+  showSettingsModal = false;
   drawer = false;
   showNoticeModal = false;
   notes = [
     {
       title: "No accounts needed.",
       description: "Everything is stored on the device you are working on",
+    },
+    {
+      title: "Not your currency?",
+      description:
+        "No problem! Just change the currency in the settings menu.",
     },
     {
       title: "We love feedback.",
@@ -186,6 +202,7 @@ class NavigationComp extends Vue {
   mounted() {
     this.showNoticeModal = this.appStore.firstLoad;
   }
+
 
   closeNoticeModal() {
     this.showNoticeModal = false;
