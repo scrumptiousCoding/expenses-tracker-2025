@@ -1,7 +1,7 @@
 <template>
   <v-row>
     <v-col cols="2">
-      <v-card class="mt-0 mb-3 sticky-note">
+      <v-card class="mt-0 mb-3 sticky-note mx-0">
         <v-card-title class="sticky-note-title mb-2">
           History Breakdown
         </v-card-title>
@@ -17,21 +17,11 @@
           ></v-text-field>
           <v-btn class="mb-2" block @click="addNewTransaction()">Add new</v-btn>
           <v-btn class="mb-2" block @click="addDummyData">Add Dummy Data</v-btn>
-          <v-btn class="mb-2" block @click="filterOnType('All')"
-            >Show all</v-btn
-          >
-          <v-btn class="mb-2" block @click="filterOnType('Fixed Expenses')"
-            >Fixed Expenses</v-btn
-          >
-          <v-btn class="mb-2" block @click="filterOnType('Other Expenses')"
-            >Other Expenses</v-btn
-          >
-          <v-btn class="mb-2" block @click="filterOnType('Income')"
-            >Income</v-btn
-          >
-          <v-btn class="mb-2" block @click="filterOnType('Savings')"
-            >Savings</v-btn
-          >
+          <v-btn class="mb-2" block @click="filterOnType('All')" :color="filterType === '' ? 'primary' : ''">Show all</v-btn>
+          <v-btn class="mb-2" block @click="filterOnType('Fixed Expenses')" :color="filterType === 'Fixed Expenses' ? 'primary' : ''"> Fixed Expenses </v-btn>
+          <v-btn class="mb-2" block @click="filterOnType('Other Expenses')" :color="filterType === 'Other Expenses' ? 'primary' : ''"> Other Expenses </v-btn>
+          <v-btn class="mb-2" block @click="filterOnType('Income')" :color="filterType === 'Income' ? 'primary' : ''"> Income </v-btn>
+          <v-btn class="mb-2" block @click="filterOnType('Savings')" :color="filterType === 'Savings' ? 'primary' : ''"> Savings </v-btn>
         </v-card-text>
       </v-card>
     </v-col>
