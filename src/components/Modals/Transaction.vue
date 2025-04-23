@@ -1,0 +1,125 @@
+<template>
+  <v-card
+    prepend-icon="mdi-calendar-clock"
+    :title="
+      transaction.id === null ? 'Add new transaction' : 'Edit transaction'
+    "
+  >
+    <v-card-text class="pb-0">
+      <v-form
+        class="d-flex flex-wrap"
+        validate-on="lazy"
+        v-model="isFormValid"
+        ref="form"
+      >
+        <v-text-field
+          density="compact"
+          variant="outlined"
+          :rules="[rules.required]"
+          label="Description"
+          hide-details="auto"
+          class="flex-1-1-100"
+          v-model="transaction.description"
+        ></v-text-field>
+        <v-text-field
+          density="compact"
+          variant="outlined"
+          label="Amount"
+          type="number"
+          hide-details="auto"
+          class="mt-2 flex-1-1-100"
+          v-model="transaction.amount"
+        ></v-text-field>
+
+        <v-select
+          v-model="transaction.type"
+          :items="appStore.transactionTypes"
+          class="mt-2 flex-1-1-100"
+          variant="outlined"
+          hide-details="auto"
+          density="compact"
+          label="Select a type of transaction"
+          single-line
+        ></v-select>
+        <v-alert
+          v-if="transaction.type === 'Savings'"
+          class="mt-2"
+          color="info"
+          density="compact"
+          text="This assumes that savings are in a seperate account and putting something in savings effectively removes it from your account, treating it like an expense. But without the bad colous attached to it"
+        ></v-alert>
+
+        <v-date-picker
+          class="mt-2"
+          color="primary"
+          width="100%"
+          v-model="transaction.date"
+          :min="minDate"
+          :max="maxDate"
+        ></v-date-picker>
+      </v-form>
+    </v-card-text>
+    <v-card-actions class="mb-3 mx-1">
+      <v-btn
+        class="mr-2"
+        text="Cancel"
+        variant="outlined"
+        color="error"
+        @click="closeModal()"
+      ></v-btn>
+      <v-btn
+        class="mr-3"
+        text="Ok"
+        variant="flat"
+        color="primary"
+        @click="saveTransaction"
+      ></v-btn>
+    </v-card-actions>
+  </v-card>
+</template>
+
+<script lang="ts">
+import { useAppStore } from "@/stores/app";
+import type { ITransaction } from "@/stores/interfaces/ITimeframe";
+import { Component, Prop, Vue, toNative } from "vue-facing-decorator";
+@Component
+class TransactionModal extends Vue {
+  @Prop({ required: true }) transaction!: ITransaction;
+  minDate: string = "";
+  maxDate: string = "";
+  isFormValid = null;
+  rules = {
+    required: (value: string) => !!value || "This field is required",
+  };
+
+  get appStore() {
+    return useAppStore();
+  }
+  get selectedTimeframe() {
+    return this.appStore.selectedTimeframe;
+  }
+
+  mounted() {
+    if (this.selectedTimeframe !== null) {
+      this.minDate = new Date(this.selectedTimeframe.startDate)
+        .toLocaleDateString()
+        .split("T")[0];
+      this.maxDate = new Date(this.selectedTimeframe.endDate)
+        .toLocaleDateString()
+        .split("T")[0];
+    }
+  }
+
+  closeModal() {
+    this.$emit("closeModal");
+  }
+  saveTransaction() {
+    let refForm = this.$refs.form as HTMLFormElement;
+    let valid = refForm.validate();
+    if (valid) {
+      this.$emit("saveTransaction", this.transaction);
+    }
+  }
+}
+export default toNative(TransactionModal);
+</script>

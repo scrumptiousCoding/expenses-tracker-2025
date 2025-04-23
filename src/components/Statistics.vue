@@ -3,7 +3,6 @@
   <info-card title="Income" :amount="getIncome" />
   <info-card title="Fixed Expenses" :amount="getFixedExpenses" />
   <info-card title="Other Expenses" :amount="getOtherExpenses" />
-  <info-card title="Savings" :amount="getSavings" />
 </template>
 <script lang="ts">
 import { useAppStore } from "@/stores/app";
@@ -17,10 +16,6 @@ import InfoCard from "./InfoCard.vue";
 class Statistics extends Vue {
   get appStore() {
     return useAppStore();
-  }
-
-  get getSavings() {
-    return this.appStore.getTotalSavings;
   }
   get getIncome() {
     return this.appStore.getTotalIncome;

@@ -89,9 +89,6 @@
               <v-list-item @click="deselectTimeframe()">
                 <v-list-item-title>De-select time frame</v-list-item-title>
               </v-list-item>
-              <v-list-item @click="addDummyData()">
-                <v-list-item-title>Add dummy time frames</v-list-item-title>
-              </v-list-item>
             </v-list>
           </v-menu>
         </div>
@@ -115,14 +112,10 @@
       <v-card-title>
         <div class="ribbon-corner"></div>
         <div class="ribbon-corner-secondary"></div>
-        <h1>{{!appStore.firstLoad ? 'Hi there!' : 'Welcome'}}</h1>
+        <h1>{{ !appStore.firstLoad ? "Hi there!" : "Welcome" }}</h1>
       </v-card-title>
-      <v-card
-        class="sticky-note">
-        <v-card-title
-          class="sticky-note-title">
-          Notes
-        </v-card-title>
+      <v-card class="sticky-note">
+        <v-card-title class="sticky-note-title"> Notes </v-card-title>
         <v-card-text class="pt-2">
           <v-timeline side="end">
             <v-timeline-item
@@ -140,13 +133,11 @@
       </v-card>
     </v-card>
   </v-dialog>
-  <v-dialog v-model="showSettingsModal" width="800" >
-    <settings-modal 
-    @closeModal="showSettingsModal = false"/>
+  <v-dialog v-model="showSettingsModal" width="800">
+    <settings-modal @closeModal="showSettingsModal = false" />
   </v-dialog>
-  <v-dialog v-model="showReleaseNotesModal" width="500" >
-    <release-notes-modal 
-    @closeModal="showSettingsModal = false"/>
+  <v-dialog v-model="showReleaseNotesModal" width="500">
+    <release-notes-modal @closeModal="showSettingsModal = false" />
   </v-dialog>
 </template>
 <script lang="ts">
@@ -160,7 +151,7 @@ import ReleaseNotesModal from "@/components/ReleaseNotesModal.vue";
   components: {
     TimeFrameModal,
     SettingsModal,
-    ReleaseNotesModal
+    ReleaseNotesModal,
   },
 })
 class NavigationComp extends Vue {
@@ -177,8 +168,7 @@ class NavigationComp extends Vue {
     },
     {
       title: "Not your currency?",
-      description:
-        "No problem! Just change the currency in the settings menu.",
+      description: "No problem! Just change the currency in the settings menu.",
     },
     {
       title: "We love feedback.",
@@ -207,7 +197,6 @@ class NavigationComp extends Vue {
     this.showNoticeModal = this.appStore.firstLoad;
   }
 
-
   closeNoticeModal() {
     this.showNoticeModal = false;
     this.appStore.firstLoad = false;
@@ -222,9 +211,6 @@ class NavigationComp extends Vue {
   deselectTimeframe() {
     this.appStore.clearTimeframe();
     this.tfOpt = null;
-  }
-  addDummyData() {
-    this.appStore.addDummyTimeframe();
   }
 }
 export default toNative(NavigationComp);

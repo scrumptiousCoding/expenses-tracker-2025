@@ -35,7 +35,14 @@ class ReleaseNotesModal extends Vue {
   notes = [
     {
       release: "0.2.0",
-      tasks: ["Added release notes to display new features and changes."],
+      tasks: [
+        "Note: Internal Data Structure Changed - Please empty out local storage, no backwards compatibility is currently available.",
+        "Added release notes to display new features and changes.",
+        "Fixed grammar issues on the welcome page",
+        "Can now remove funds from the savings account",
+        "Can now add savings account starting balance to the time frame",
+        "Removed 'Add dummy time frame' option",
+      ],
     },
   ];
   closeModal() {
