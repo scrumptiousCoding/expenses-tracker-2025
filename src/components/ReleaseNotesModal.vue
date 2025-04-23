@@ -42,6 +42,7 @@ class ReleaseNotesModal extends Vue {
         "Can now remove funds from the savings account",
         "Can now add savings account starting balance to the time frame",
         "Removed 'Add dummy time frame' option",
+        "Localization on currency now allows for selection of currency"
       ],
     },
   ];
