@@ -1,13 +1,16 @@
 <template>
   <v-card
     prepend-icon="mdi-calendar-clock"
-    :title="newTimeFrame ? 'Add new timeframe' : 'Edit timeframe'"
+    :title="newTimeFrame ? 'Add New Timeframe' : 'Edit Timeframe'"
   >
     <v-card-text class="pb-0">
-      <v-form class="d-flex flex-wrap">
+      <v-form class="d-flex flex-wrap"
+        v-model="isFormValid"
+        ref="timeFrameForm" >
         <v-text-field
           density="compact"
           variant="outlined"
+          :rules="[rules.required]"
           label="Description"
           class="flex-1-1-100"
           v-model="description"
@@ -76,6 +79,10 @@ class TimeFrameModal extends Vue {
   description = "";
   startingBalance: string = "0";
   savingsStartingBalance: string = "0";
+  isFormValid = null;
+  rules = {
+    required: (value: string) => !!value || "This field is required",
+  };
 
   get appStore() {
     return useAppStore();
@@ -97,24 +104,28 @@ class TimeFrameModal extends Vue {
   }
 
   addNewTimeframe() {
-    if (this.newTimeFrame) {
-      this.appStore.addNewTimeframe(
-        this.description,
-        this.startDate,
-        this.endDate,
-        parseFloat(this.startingBalance),
-        parseFloat(this.savingsStartingBalance)
-      );
-    } else {
-      this.appStore.editTimeframe(
-        this.description,
-        this.startDate,
-        this.endDate,
-        parseFloat(this.startingBalance),
-        parseFloat(this.savingsStartingBalance)
-      );
+    let refForm = this.$refs.timeFrameForm as HTMLFormElement;
+    let valid = refForm.validate();
+    if (this.isFormValid) {
+      if (this.newTimeFrame) {
+        this.appStore.addNewTimeframe(
+          this.description,
+          this.startDate,
+          this.endDate,
+          parseFloat(this.startingBalance),
+          parseFloat(this.savingsStartingBalance)
+        );
+      } else {
+        this.appStore.editTimeframe(
+          this.description,
+          this.startDate,
+          this.endDate,
+          parseFloat(this.startingBalance),
+          parseFloat(this.savingsStartingBalance)
+        );
+      }
+      this.closeModal();
     }
-    this.closeModal();
   }
 
   closeModal() {

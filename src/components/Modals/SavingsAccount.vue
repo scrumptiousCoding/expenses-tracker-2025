@@ -147,12 +147,8 @@ class SavingsAccountModal extends Vue {
     this.deleteTransactionModal = true;
   }
   deleteTransaction() {
-    try {
-      this.appStore.removeTransactionFromSavings(this.transaction.id!);
-      this.deleteTransactionModal = false;
-    } catch (error) {
-      //TODO: handle error
-    }
+    this.appStore.removeTransactionFromSavings(this.transaction.id!);
+    this.deleteTransactionModal = false;
   }
   editItem(item: ITransaction) {
     //dont just assign the item to transaction, create a new object with the same values

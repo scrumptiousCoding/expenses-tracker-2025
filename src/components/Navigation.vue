@@ -112,7 +112,7 @@
       <v-card-title>
         <div class="ribbon-corner"></div>
         <div class="ribbon-corner-secondary"></div>
-        <h1>{{ !appStore.firstLoad ? "Hi there!" : "Welcome" }}</h1>
+        <h1>{{ !appStore.firstLoad ? "Hi There!" : "Welcome" }}</h1>
       </v-card-title>
       <v-card class="sticky-note">
         <v-card-title class="sticky-note-title"> Notes </v-card-title>

@@ -175,36 +175,19 @@ export const useAppStore = defineStore("app", {
         }
       }
     },
-    addNewTransaction(
-      description: string,
-      date: Date,
-      amount: number,
-      type: string
-    ) {
-      this.selectedTimeframe?.transaction.push({
-        description: description,
-        date: date,
-        type: type,
-        amount: amount,
-        id: this.selectedTimeframe.transaction.length,
-      });
+    //new transactions on timeframe
+    addNewTransaction(transaction: ITransaction) {
+      transaction.id = this.selectedTimeframe!.transaction.length;
+      this.selectedTimeframe?.transaction.push(transaction);
     },
-    updateTransaction(
-      id: number,
-      description: string,
-      date: Date,
-      amount: number,
-      type: string
-    ) {
+    updateTransaction(transaction: ITransaction) {
       if (this.selectedTimeframe) {
-        const transaction = this.selectedTimeframe.transaction.find(
-          (x) => x.id === id
-        );
-        if (transaction) {
-          transaction.description = description;
-          transaction.date = date;
-          transaction.amount = amount;
-          transaction.type = type;
+        const trans = this.selectedTimeframe.transaction.find( (x) => x.id === transaction.id );
+        if (trans) {
+          trans.description = transaction.description;
+          trans.date = transaction.date;
+          trans.amount = transaction.amount;
+          trans.type = transaction.type;
         }
       }
     },

@@ -1,5 +1,5 @@
 <template>
-  <v-card prepend-icon="mdi-calendar-clock" title="Delete transaction">
+  <v-card prepend-icon="mdi-calendar-clock" title="Delete Transaction">
     <v-card-text class="pb-0">
       <p>
         Are you sure you want to delete

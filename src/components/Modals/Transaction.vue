@@ -1,9 +1,7 @@
 <template>
   <v-card
     prepend-icon="mdi-calendar-clock"
-    :title="
-      transaction.id === null ? 'Add new transaction' : 'Edit transaction'
-    "
+    :title=" transaction.id === null ? 'Add New Transaction' : 'Edit Transaction' "
   >
     <v-card-text class="pb-0">
       <v-form
@@ -116,7 +114,7 @@ class TransactionModal extends Vue {
   saveTransaction() {
     let refForm = this.$refs.form as HTMLFormElement;
     let valid = refForm.validate();
-    if (valid) {
+    if (this.isFormValid) {
       this.$emit("saveTransaction", this.transaction);
     }
   }

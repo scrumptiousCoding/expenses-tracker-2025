@@ -103,8 +103,14 @@
     </v-col>
   </v-row>
 
-  <v-dialog v-model="addNewTransactionModal" width="600">
-    <v-card
+  <v-dialog v-model="transactionModal" width="500">
+    
+    <transaction-modal
+      :transaction="transaction"
+      @closeModal="transactionModal = !transactionModal"
+      @saveTransaction="updateTransaction"
+    />
+    <!-- <v-card
       prepend-icon="mdi-calendar-clock"
       :title="transactionId === -1 ? 'Add new transaction' : 'Edit transaction'"
     >
@@ -162,7 +168,7 @@
           text="Cancel"
           variant="outlined"
           color="error"
-          @click="addNewTransactionModal = false"
+          @click="transactionModal = false"
         ></v-btn>
         <v-btn
           class="mr-3"
@@ -172,37 +178,15 @@
           @click="updateTransaction"
         ></v-btn>
       </v-card-actions>
-    </v-card>
+    </v-card> -->
   </v-dialog>
 
   <v-dialog v-model="deleteTransactionModal" width="400">
-    <v-card prepend-icon="mdi-calendar-clock" title="Delete transaction">
-      <v-card-text class="pb-0">
-        <p>
-          Are you sure you want to delete
-          <span class="font-weight-bold">{{ transactionDescription }}</span>
-          with a total of
-          <span class="font-weight-bold">R {{ transactionAmount }}</span
-          >?
-        </p>
-      </v-card-text>
-      <v-card-actions class="mb-3 mx-1">
-        <v-btn
-          class="mr-2"
-          text="Cancel"
-          variant="outlined"
-          color="error"
-          @click="deleteTransactionModal = false"
-        ></v-btn>
-        <v-btn
-          class="mr-3"
-          text="Ok"
-          variant="flat"
-          color="primary"
-          @click="deleteTransaction"
-        ></v-btn>
-      </v-card-actions>
-    </v-card>
+    <delete-transaction-modal
+      :transaction="transaction"
+      @closeModal="deleteTransactionModal = !deleteTransactionModal"
+      @deleteTransaction="deleteTransaction"
+    />
   </v-dialog>
 </template>
 <script lang="ts">
@@ -211,17 +195,24 @@ import { useGraphStore } from "@/stores/graphStore";
 import { useSettingsStore } from "@/stores/settingsStore";
 import type { ITransaction } from "@/stores/interfaces/ITimeframe";
 import { Component, Vue, toNative } from "vue-facing-decorator";
-@Component
+import TransactionModal from "@/components/Modals/Transaction.vue";
+import DeleteTransactionModal from "@/components/Modals/DeleteTransaction.vue";
+@Component({
+  components: {
+    TransactionModal,
+    DeleteTransactionModal,
+  },
+})
 class TableDisplay extends Vue {
   loadTableData: boolean = false;
-  addNewTransactionModal: boolean = false;
-  transactionId: number = -1;
-  transactionDescription: string = "";
-  transactionDate: Date = new Date();
-  transactionType: string = "Other Expenses";
-  // the text field converts it to a string - and the calculation breaks if it is a string.
-  // as such it gets defined here as a string but converted to a number before saving the amount.
-  transactionAmount: string = "0";
+  transactionModal: boolean = false;
+  transaction: ITransaction = {
+    id: null,
+    description: "",
+    date: new Date(),
+    type: "Other Expenses",
+    amount: 0,
+  };
   filterValue: string = "";
   deleteTransactionModal: boolean = false;
 
@@ -267,31 +258,33 @@ class TableDisplay extends Vue {
     }
   }
   confirmDeleteTransaction(item: ITransaction) {
-    this.transactionDescription = item.description;
-    this.transactionAmount = item.amount.toString();
-    this.transactionId = item.id;
+    this.transaction = item;
     this.deleteTransactionModal = true;
   }
   deleteTransaction() {
-    this.appStore.deleteTransaction(this.transactionId);
+    this.appStore.deleteTransaction(this.transaction.id!);
     this.updateTable();
     this.deleteTransactionModal = false;
   }
   addNewTransaction() {
-    this.transactionAmount = "0";
-    this.transactionDescription = "";
-    this.transactionDate = new Date();
-    this.transactionType = "Other Expenses";
-    this.addNewTransactionModal = true;
-    this.transactionId = -1;
+    this.transaction = {
+      id: null,
+      description: "",
+      amount: 0,
+      type: "Other Expenses",
+      date: new Date(),
+    };
+    this.transactionModal = true;
   }
   editItem(item: ITransaction) {
-    this.transactionAmount = item.amount.toString();
-    this.transactionDescription = item.description;
-    this.transactionDate = new Date(item.date);
-    this.transactionType = item.type;
-    this.transactionId = item.id;
-    this.addNewTransactionModal = true;
+    this.transaction = {
+      id: item.id,
+      description: item.description,
+      amount: item.amount,
+      type: item.type,
+      date: new Date(item.date),
+    };
+    this.transactionModal = true;
   }
   addDummyData() {
     this.appStore.addDummyData();
@@ -303,24 +296,13 @@ class TableDisplay extends Vue {
     this.loadTableData = false;
   }
   updateTransaction() {
-    if (this.transactionId == -1) {
-      this.appStore.addNewTransaction(
-        this.transactionDescription,
-        this.transactionDate,
-        parseFloat(this.transactionAmount),
-        this.transactionType
-      );
+    if (this.transaction.id === null) {
+      this.appStore.addNewTransaction(this.transaction);
     } else {
-      this.appStore.updateTransaction(
-        this.transactionId,
-        this.transactionDescription,
-        this.transactionDate,
-        parseFloat(this.transactionAmount),
-        this.transactionType
-      );
+      this.appStore.updateTransaction(this.transaction);
     }
     this.updateTable();
-    this.addNewTransactionModal = false;
+    this.transactionModal = false;
   }
   filterOnType(type: string) {
     if (type === "All") {
