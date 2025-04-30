@@ -131,6 +131,7 @@ export const useAppStore = defineStore("app", {
         savingsTransactions: [],
       };
       this.timeframes.push(newTf);
+      this.selectedTimeframe = newTf;
     },
     editTimeframe(
       description: string,

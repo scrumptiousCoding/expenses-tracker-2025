@@ -51,7 +51,7 @@
         </div>
         <div class="flex-1-0">
           <v-select
-            v-model="tfOpt"
+            v-model="selectedTimeframe"
             :items="timeFrameOptions"
             item-title="description"
             item-value="id"
@@ -155,7 +155,6 @@ import ReleaseNotesModal from "@/components/ReleaseNotesModal.vue";
   },
 })
 class NavigationComp extends Vue {
-  tfOpt = null;
   showNewTimeframeModal = false;
   showSettingsModal = false;
   showReleaseNotesModal = false;
@@ -193,6 +192,10 @@ class NavigationComp extends Vue {
     return this.appStore.timeframes;
   }
 
+  get selectedTimeframe() {
+    return this.appStore.selectedTimeframe;
+  }
+
   mounted() {
     this.showNoticeModal = this.appStore.firstLoad;
   }
@@ -203,14 +206,12 @@ class NavigationComp extends Vue {
   }
 
   changeTimeframe() {
-    if (this.tfOpt !== null) {
-      this.appStore.setSelectedTimeframe(this.tfOpt);
+    if (this.appStore.selectedTimeframe !== null) {
       this.graphStore.constructData();
     }
   }
   deselectTimeframe() {
     this.appStore.clearTimeframe();
-    this.tfOpt = null;
   }
 }
 export default toNative(NavigationComp);

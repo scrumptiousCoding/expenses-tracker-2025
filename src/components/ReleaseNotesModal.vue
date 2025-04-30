@@ -44,7 +44,8 @@ class ReleaseNotesModal extends Vue {
         "Removed 'Add dummy time frame' option",
         "Localization on currency now allows for selection of currency",
         "Description field is now required on transactions and time frames",
-        "End Date of a timeframe can no longer be set to a date before the start date"
+        "End Date of a timeframe can no longer be set to a date before the start date",
+        "Automatically set the newest created time frame to the current time frame"
       ],
     },
   ];
