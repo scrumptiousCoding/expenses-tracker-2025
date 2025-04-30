@@ -36,12 +36,14 @@
             color="primary"
             width="100%"
             v-model="startDate"
+            @update:modelValue="checkEndDate"
           ></v-date-picker>
         </div>
         <div class="flex-1-0 ml-1">
           <v-date-picker
             color="primary"
             width="100%"
+            :min="startDate"
             v-model="endDate"
           ></v-date-picker>
         </div>
@@ -100,6 +102,12 @@ class TimeFrameModal extends Vue {
     } else {
       this.startDate = new Date();
       this.endDate = new Date();
+    }
+  }
+
+  checkEndDate() {
+    if (this.startDate > this.endDate) {
+      this.endDate = this.startDate;
     }
   }
 

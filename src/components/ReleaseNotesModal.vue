@@ -43,7 +43,8 @@ class ReleaseNotesModal extends Vue {
         "Can now add savings account starting balance to the time frame",
         "Removed 'Add dummy time frame' option",
         "Localization on currency now allows for selection of currency",
-        "Descrption field is now required on transactions and time frames"
+        "Description field is now required on transactions and time frames",
+        "End Date of a timeframe can no longer be set to a date before the start date"
       ],
     },
   ];

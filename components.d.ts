@@ -19,7 +19,7 @@ declare module 'vue' {
     SettingsModal: typeof import('./src/components/SettingsModal.vue')['default']
     Statistics: typeof import('./src/components/Statistics.vue')['default']
     TableDisplay: typeof import('./src/components/TableDisplay.vue')['default']
-    TimeFrameModal: typeof import('./src/components/TimeFrameModal.vue')['default']
+    TimeFrame: typeof import('./src/components/Modals/TimeFrame.vue')['default']
     Transaction: typeof import('./src/components/Modals/Transaction.vue')['default']
   }
 }

@@ -144,7 +144,7 @@
 import { useAppStore } from "@/stores/app";
 import { useGraphStore } from "@/stores/graphStore";
 import { Component, Vue, toNative } from "vue-facing-decorator";
-import TimeFrameModal from "@/components/TimeFrameModal.vue";
+import TimeFrameModal from "@/components/Modals/TimeFrame.vue";
 import SettingsModal from "@/components/SettingsModal.vue";
 import ReleaseNotesModal from "@/components/ReleaseNotesModal.vue";
 @Component({

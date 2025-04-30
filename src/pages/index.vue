@@ -107,7 +107,7 @@
 import { Component, Vue, toNative } from "vue-facing-decorator";
 import { useSettingsStore } from "@/stores/settingsStore";
 import NavigationComp from "@/components/Navigation.vue";
-import TimeFrameModal from "@/components/TimeFrameModal.vue";
+import TimeFrameModal from "@/components/Modals/TimeFrame.vue";
 import { useAppStore } from "@/stores/app";
 import Statistics from "@/components/Statistics.vue";
 import TableDisplay from "@/components/TableDisplay.vue";
