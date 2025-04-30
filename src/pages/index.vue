@@ -14,7 +14,7 @@
           <Statistics />
         </v-col>
         <v-col cols="4">
-          <div v-if="graphStore.seriesData.length <= 0">nothing here yet</div>
+          <div v-if="graphStore.seriesData.length <= 0">Nothing here yet</div>
           <apexchart
             v-if="graphStore.seriesData.length > 0"
             type="pie"

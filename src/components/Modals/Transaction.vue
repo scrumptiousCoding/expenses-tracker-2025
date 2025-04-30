@@ -23,6 +23,8 @@
           density="compact"
           variant="outlined"
           label="Amount"
+          :rules="[rules.required, rules.noNegative]"
+          :error-messages="transaction.amount < 0 ? 'Amount must be greater than 0' : null"
           type="number"
           hide-details="auto"
           class="mt-2 flex-1-1-100"
@@ -88,6 +90,7 @@ class TransactionModal extends Vue {
   isFormValid = null;
   rules = {
     required: (value: string) => !!value || "This field is required",
+    noNegative: (value: number) => value >= 0 || "Amount must be greater than 0",
   };
 
   get appStore() {

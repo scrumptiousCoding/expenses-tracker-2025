@@ -51,7 +51,7 @@
         </div>
         <div class="flex-1-0">
           <v-select
-            v-model="selectedTimeframe"
+            v-model="appStore.selectedTimeframe"
             :items="timeFrameOptions"
             item-title="description"
             item-value="id"
@@ -190,10 +190,6 @@ class NavigationComp extends Vue {
 
   get timeFrameOptions() {
     return this.appStore.timeframes;
-  }
-
-  get selectedTimeframe() {
-    return this.appStore.selectedTimeframe;
   }
 
   mounted() {
