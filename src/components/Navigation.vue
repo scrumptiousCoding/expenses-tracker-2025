@@ -145,8 +145,8 @@ import { useAppStore } from "@/stores/app";
 import { useGraphStore } from "@/stores/graphStore";
 import { Component, Vue, toNative } from "vue-facing-decorator";
 import TimeFrameModal from "@/components/Modals/TimeFrame.vue";
-import SettingsModal from "@/components/SettingsModal.vue";
-import ReleaseNotesModal from "@/components/ReleaseNotesModal.vue";
+import SettingsModal from "@/components/Modals/Settings.vue";
+import ReleaseNotesModal from "@/components/Modals/ReleaseNotes.vue";
 @Component({
   components: {
     TimeFrameModal,
@@ -175,7 +175,7 @@ class NavigationComp extends Vue {
         "Feel free to reach out and tell us what you like or would like to see!",
     },
     {
-      title: "(Coming soon) Keep your data save.",
+      title: "(Coming soon) Keep your data safe.",
       description: "Export your data and import it to other devices.",
     },
   ];
