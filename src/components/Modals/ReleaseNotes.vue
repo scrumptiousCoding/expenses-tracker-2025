@@ -1,23 +1,27 @@
 <template>
   <v-card>
     <v-card-title>
-      <div class="ribbon-corner"></div>
-      <div class="ribbon-corner-secondary"></div>
+      <div class="ribbon-corner" />
+      <div class="ribbon-corner-secondary" />
       <h1>Release Notes</h1>
     </v-card-title>
     <v-card-text class="px-1">
-      <v-card class="sticky-note" v-for="(note, index) in notes" :key="index">
+      <v-card
+        v-for="(note, index) in notes"
+        :key="index"
+        class="sticky-note"
+      >
         <v-card-title class="sticky-note-title">
           Release {{ note.release }}
         </v-card-title>
         <v-card-text class="pb-0">
           <v-timeline side="end">
             <v-timeline-item
+              v-for="(task, j) in note.tasks"
+              :key="j"
               size="x-small"
               color="secondary"
               fill-dot
-              v-for="(task, index) in note.tasks"
-              :key="index"
             >
               {{ task }}
             </v-timeline-item>

@@ -1,8 +1,21 @@
 <template>
-  <v-card height="50" image="@/assets/pumpkinTheme/pumpkinBack.jpg" class="mb-3"></v-card>
-  <info-card title="Income" :amount="getIncome" />
-  <info-card title="Fixed Expenses" :amount="getFixedExpenses" />
-  <info-card title="Other Expenses" :amount="getOtherExpenses" />
+  <v-card
+    height="50"
+    image="@/assets/pumpkinTheme/pumpkinBack.jpg"
+    class="mb-3"
+  />
+  <info-card
+    title="Income"
+    :amount="getIncome"
+  />
+  <info-card
+    title="Fixed Expenses"
+    :amount="getFixedExpenses"
+  />
+  <info-card
+    title="Other Expenses"
+    :amount="getOtherExpenses"
+  />
 </template>
 <script lang="ts">
 import { useAppStore } from "@/stores/app";

@@ -5,21 +5,22 @@
   >
     <v-card-text class="pb-0">
       <v-form
+        ref="form"
+        v-model="isFormValid"
         class="d-flex flex-wrap"
         validate-on="lazy"
-        v-model="isFormValid"
-        ref="form"
       >
         <v-text-field
+          v-model="transaction.description"
           density="compact"
           variant="outlined"
           :rules="[rules.required]"
           label="Description"
           hide-details="auto"
           class="flex-1-1-100"
-          v-model="transaction.description"
-        ></v-text-field>
+        />
         <v-text-field
+          v-model="transaction.amount"
           density="compact"
           variant="outlined"
           label="Amount"
@@ -28,8 +29,7 @@
           type="number"
           hide-details="auto"
           class="mt-2 flex-1-1-100"
-          v-model="transaction.amount"
-        ></v-text-field>
+        />
 
         <v-select
           v-model="transaction.type"
@@ -40,23 +40,23 @@
           density="compact"
           label="Select a type of transaction"
           single-line
-        ></v-select>
+        />
         <v-alert
           v-if="transaction.type === 'Savings'"
           class="mt-2"
           color="info"
           density="compact"
           text="This assumes that savings are in a seperate account and putting something in savings effectively removes it from your account, treating it like an expense. But without the bad colous attached to it"
-        ></v-alert>
+        />
 
         <v-date-picker
+          v-model="transaction.date"
           class="mt-2"
           color="primary"
           width="100%"
-          v-model="transaction.date"
           :min="minDate"
           :max="maxDate"
-        ></v-date-picker>
+        />
       </v-form>
     </v-card-text>
     <v-card-actions class="mb-3 mx-1">
@@ -66,14 +66,14 @@
         variant="outlined"
         color="error"
         @click="closeModal()"
-      ></v-btn>
+      />
       <v-btn
         class="mr-3"
         text="Ok"
         variant="flat"
         color="primary"
         @click="saveTransaction"
-      ></v-btn>
+      />
     </v-card-actions>
   </v-card>
 </template>
@@ -115,9 +115,8 @@ class TransactionModal extends Vue {
     this.$emit("closeModal");
   }
   saveTransaction() {
-    let refForm = this.$refs.form as HTMLFormElement;
-    let valid = refForm.validate();
-    if (this.isFormValid) {
+    const refForm = this.$refs.form as HTMLFormElement;
+    if (refForm.validate()) {
       this.$emit("saveTransaction", this.transaction);
     }
   }

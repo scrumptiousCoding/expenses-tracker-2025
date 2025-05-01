@@ -7,57 +7,65 @@
         </v-card-title>
         <v-card-text>
           <v-text-field
+            v-model="filterType"
             density="compact"
             variant="outlined"
             label="Search"
             hide-details="auto"
             class="flex-1-1-100 mb-2"
             clearable
-            v-model="filterType"
-          ></v-text-field>
-          <v-btn class="mb-2" block @click="addNewTransaction()">
+          />
+          <v-btn
+            class="mb-2"
+            block
+            @click="addNewTransaction()"
+          >
             Add new
           </v-btn>
-          <v-btn class="mb-2" block @click="addDummyData"> 
+          <v-btn
+            class="mb-2"
+            block
+            @click="addDummyData"
+          > 
             Add Dummy Data
           </v-btn>
           <v-btn
             class="mb-2"
             block
-            @click="filterOnType('All')"
             :color="filterType === '' ? 'primary' : ''"
-            > 
+            @click="filterOnType('All')"
+          > 
             Show all 
           </v-btn>
           <v-btn
             class="mb-2"
             block
-            @click="filterOnType('Fixed Expenses')"
             :color="filterType === 'Fixed Expenses' ? 'primary' : ''"
+            @click="filterOnType('Fixed Expenses')"
           >
             Fixed Expenses
           </v-btn>
           <v-btn
             class="mb-2"
             block
-            @click="filterOnType('Other Expenses')"
             :color="filterType === 'Other Expenses' ? 'primary' : ''"
+            @click="filterOnType('Other Expenses')"
           >
             Other Expenses
           </v-btn>
           <v-btn
             class="mb-2"
             block
-            @click="filterOnType('Income')"
             :color="filterType === 'Income' ? 'primary' : ''"
+            @click="filterOnType('Income')"
           >
             Income
           </v-btn>
           <v-btn
             class="mb-2"
             block
-            @click="filterOnType('Savings')"
             :color="filterType === 'Savings' ? 'primary' : ''"
+            @click="filterOnType('Savings')"
           >
             Savings
           </v-btn>
@@ -75,27 +83,30 @@
           :items="selectedTimeframe?.transaction"
           items-per-page="20"
         >
-          <template v-slot:item.type="{ item }">
+          <template #[`item.type`]="{ item }">
             <td>
-              <v-chip :color="getChipColor(item.type)" size="small">
+              <v-chip
+                :color="getChipColor(item.type)"
+                size="small"
+              >
                 {{ item.type }} 
               </v-chip>
             </td>
           </template>
-          <template v-slot:item.actions="{ item }">
+          <template #[`item.actions`]="{ item }">
             <td class="d-flex justify-end">
               <v-btn
                 size="x-small"
-                @click="editItem(item)"
                 variant="flat"
                 icon="mdi-pencil"
-              ></v-btn>
+                @click="editItem(item)"
+              />
               <v-btn
                 size="x-small"
-                @click="confirmDeleteTransaction(item)"
                 icon="mdi-trash-can"
                 variant="flat"
-              ></v-btn>
+                @click="confirmDeleteTransaction(item)"
+              />
             </td>
           </template>
         </v-data-table>
@@ -103,12 +114,14 @@
     </v-col>
   </v-row>
 
-  <v-dialog v-model="transactionModal" width="500">
-    
+  <v-dialog
+    v-model="transactionModal"
+    width="500"
+  >
     <transaction-modal
       :transaction="transaction"
-      @closeModal="transactionModal = !transactionModal"
-      @saveTransaction="updateTransaction"
+      @close-modal="transactionModal = !transactionModal"
+      @save-transaction="updateTransaction"
     />
     <!-- <v-card
       prepend-icon="mdi-calendar-clock"
@@ -181,11 +194,14 @@
     </v-card> -->
   </v-dialog>
 
-  <v-dialog v-model="deleteTransactionModal" width="400">
+  <v-dialog
+    v-model="deleteTransactionModal"
+    width="400"
+  >
     <delete-transaction-modal
       :transaction="transaction"
-      @closeModal="deleteTransactionModal = !deleteTransactionModal"
-      @deleteTransaction="deleteTransaction"
+      @close-modal="deleteTransactionModal = !deleteTransactionModal"
+      @delete-transaction="deleteTransaction"
     />
   </v-dialog>
 </template>

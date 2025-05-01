@@ -4,7 +4,7 @@ import { useAppStore } from "./app";
 export interface IGraphStore{
     seriesData: number[],
     labels: string[],
-    appStore: any
+    appStore: ReturnType<typeof useAppStore>
 }
 
 export const useGraphStore = defineStore('graphStore', {
@@ -30,7 +30,7 @@ export const useGraphStore = defineStore('graphStore', {
             for (let i = 0; i < this.appStore.transactionTypes.length; i++) {
                 const transType = this.appStore.transactionTypes[i]
                 if (transType !== "Income") {
-                    let amt = this.appStore.calculateTotal(transType)
+                    const amt = this.appStore.calculateTotal(transType)
                     this.seriesData.push(amt)
                 }
             }
