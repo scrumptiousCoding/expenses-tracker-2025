@@ -1,6 +1,6 @@
 <template>
   <v-card class="mb-3">
-    <div class="bookmark-right"></div>
+    <div class="bookmark-right" />
     <div class="card-border">
       <v-card-text>
         <p class="info-card-title">

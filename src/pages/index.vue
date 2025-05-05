@@ -6,7 +6,9 @@
       </v-col>
     </v-row>
     <v-row v-if="!selectedTimeframe">
-      <v-col class="text-center"> Please select a timeframe to view </v-col>
+      <v-col class="text-center">
+        Please select a timeframe to view
+      </v-col>
     </v-row>
     <div v-if="selectedTimeframe">
       <v-row>
@@ -14,28 +16,36 @@
           <Statistics />
         </v-col>
         <v-col cols="4">
-          <div v-if="graphStore.seriesData.length <= 0">Nothing here yet</div>
+          <div v-if="graphStore.seriesData.length <= 0">
+            Nothing here yet
+          </div>
           <apexchart
             v-if="graphStore.seriesData.length > 0"
             type="pie"
             :options="options"
             :series="graphStore.seriesData"
-          ></apexchart>
+          />
         </v-col>
         <v-col cols="4">
           <v-card class="mb-3">
-            <div class="bookmark-right"></div>
+            <div class="bookmark-right" />
             <div class="card-border">
               <v-card-text>
-                <v-row align="center" justify="center">
-                  <v-col cols="auto" class="pr-0">
+                <v-row
+                  align="center"
+                  justify="center"
+                >
+                  <v-col
+                    cols="auto"
+                    class="pr-0"
+                  >
                     <v-btn
                       variant="text"
                       class="pa-0"
                       density="compact"
                       icon="mdi-pencil"
                       @click="showModal()"
-                    ></v-btn>
+                    />
                   </v-col>
                   <v-col>
                     <p class="info-card-title">
@@ -61,23 +71,34 @@
             title="Starting Amount"
             :amount="selectedTimeframe.startingBalance"
           />
-          <info-card title="Closing Amount" :amount="closingBalance" />
+          <info-card
+            title="Closing Amount"
+            :amount="closingBalance"
+          />
           <v-card class="mb-3">
-            <div class="bookmark-right"></div>
+            <div class="bookmark-right" />
             <div class="card-border">
               <v-card-text>
-                <v-row align="center" justify="center">
-                  <v-col cols="auto" class="pr-0">
+                <v-row
+                  align="center"
+                  justify="center"
+                >
+                  <v-col
+                    cols="auto"
+                    class="pr-0"
+                  >
                     <v-btn
                       variant="text"
                       class="pa-0"
                       density="compact"
                       icon="mdi-clipboard-text-clock-outline"
                       @click="showSavingsModal = !showSavingsModal"
-                    ></v-btn>
+                    />
                   </v-col>
                   <v-col>
-                    <p class="info-card-title">Saved this timeframe</p>
+                    <p class="info-card-title">
+                      Saved this timeframe
+                    </p>
                     <h3>{{ settingsStore.currencyFormatting(getSavings) }}</h3>
                   </v-col>
                 </v-row>
@@ -91,14 +112,20 @@
       </v-row>
     </div>
 
-    <v-dialog v-model="showTimeFrameModal" width="800">
+    <v-dialog
+      v-model="showTimeFrameModal"
+      width="800"
+    >
       <time-frame-modal
-        :newTimeFrame="false"
-        @closeModal="showTimeFrameModal = false"
+        :new-time-frame="false"
+        @close-modal="showTimeFrameModal = false"
       />
     </v-dialog>
 
-    <v-dialog v-model="showSavingsModal" width="800">
+    <v-dialog
+      v-model="showSavingsModal"
+      width="800"
+    >
       <savings-account-modal />
     </v-dialog>
   </v-container>
@@ -140,7 +167,7 @@ class IndexPage extends Vue {
     },
     labels: ["Fixed Expenses", "Other Expenses", "Savings"],
     dataLabels: {
-      formatter(val: any, opts: any) {
+      formatter(val: number, opts: { w: { globals: { labels: string[] } }, seriesIndex: number }) {
         const name = opts.w.globals.labels[opts.seriesIndex];
         return [name, val.toFixed(2)];
       },
@@ -175,14 +202,16 @@ class IndexPage extends Vue {
   }
 
   get closingBalance() {
-    if (this.selectedTimeframe?.startingBalance === undefined) {
-      return 0;
-    }
+    const startingBalance = Number(this.selectedTimeframe?.startingBalance) || 0
+    const otherExpenses = Number(this.appStore.calculateTotal("Other Expenses")) || 0
+    const fixedExpenses = Number(this.appStore.calculateTotal("Fixed Expenses")) || 0
+    const income = Number(this.appStore.calculateTotal("Income")) || 0
+
     return (
-      this.selectedTimeframe?.startingBalance -
-      this.appStore.calculateTotal("Other Expenses") -
-      this.appStore.calculateTotal("Fixed Expenses") +
-      this.appStore.calculateTotal("Income")
+      startingBalance -
+      otherExpenses -
+      fixedExpenses +
+      income
     );
   }
 

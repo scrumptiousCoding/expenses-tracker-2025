@@ -1,38 +1,44 @@
 <template>
-  <v-navigation-drawer v-model="drawer" temporary>
-    <v-divider></v-divider>
+  <v-navigation-drawer
+    v-model="drawer"
+    temporary
+  >
+    <v-divider />
 
-    <v-list density="compact" nav>
+    <v-list
+      density="compact"
+      nav
+    >
       <v-list-item
         prepend-icon="mdi-bulletin-board"
         title="Notice"
         @click="showNoticeModal = !showNoticeModal"
-      ></v-list-item>
+      />
       <v-list-item
         prepend-icon="mdi-cog"
         title="Settings"
         @click="showSettingsModal = !showSettingsModal"
-      ></v-list-item>
+      />
       <v-list-item
         prepend-icon="mdi-view-dashboard"
         title="Theme"
-      ></v-list-item>
+      />
       <v-list-item
         prepend-icon="mdi-view-dashboard"
         title="Import data"
-      ></v-list-item>
+      />
       <v-list-item
         prepend-icon="mdi-view-dashboard"
         title="Export data"
-      ></v-list-item>
+      />
       <v-list-item
         prepend-icon="mdi-book-open-page-variant-outline"
         title="Release Notes"
         @click="showReleaseNotesModal = !showReleaseNotesModal"
-      ></v-list-item>
+      />
     </v-list>
 
-    <v-divider></v-divider>
+    <v-divider />
 
     <v-list-item> Copyright © 2025 </v-list-item>
   </v-navigation-drawer>
@@ -42,12 +48,11 @@
         <div class="mx-2 align-self-center">
           <v-btn
             block
-            @click="drawer = !drawer"
             variant="flat"
             icon="mdi-menu"
             size="small"
-          >
-          </v-btn>
+            @click="drawer = !drawer"
+          />
         </div>
         <div class="flex-1-0">
           <v-select
@@ -62,27 +67,27 @@
             return-object
             single-line
             @update:model-value="changeTimeframe"
-          ></v-select>
+          />
         </div>
         <div class="mx-2 align-self-center">
           <v-btn
             block
-            @click="showNewTimeframeModal = true"
             variant="flat"
             color="secondary"
+            @click="showNewTimeframeModal = true"
           >
             New timeframe
           </v-btn>
         </div>
         <div class="align-self-center">
           <v-menu location="bottom">
-            <template v-slot:activator="{ props }">
+            <template #activator="{ props }">
               <v-btn
                 variant="text"
                 density="comfortable"
                 icon="mdi-cog"
                 v-bind="props"
-              ></v-btn>
+              />
             </template>
 
             <v-list>
@@ -96,10 +101,13 @@
     </div>
   </v-card>
 
-  <v-dialog v-model="showNewTimeframeModal" width="800">
+  <v-dialog
+    v-model="showNewTimeframeModal"
+    width="800"
+  >
     <time-frame-modal
-      :newTimeFrame="true"
-      @closeModal="showNewTimeframeModal = false"
+      :new-time-frame="true"
+      @close-modal="showNewTimeframeModal = false"
     />
   </v-dialog>
 
@@ -110,18 +118,20 @@
   >
     <v-card>
       <v-card-title>
-        <div class="ribbon-corner"></div>
-        <div class="ribbon-corner-secondary"></div>
+        <div class="ribbon-corner" />
+        <div class="ribbon-corner-secondary" />
         <h1>{{ !appStore.firstLoad ? "Hi There!" : "Welcome" }}</h1>
       </v-card-title>
       <v-card class="sticky-note">
-        <v-card-title class="sticky-note-title"> Notes </v-card-title>
+        <v-card-title class="sticky-note-title">
+          Notes
+        </v-card-title>
         <v-card-text class="pt-2">
           <v-timeline side="end">
             <v-timeline-item
-              size="x-small"
               v-for="(note, index) in notes"
               :key="index"
+              size="x-small"
               color="secondary"
               fill-dot
             >
@@ -133,11 +143,17 @@
       </v-card>
     </v-card>
   </v-dialog>
-  <v-dialog v-model="showSettingsModal" width="800">
-    <settings-modal @closeModal="showSettingsModal = false" />
+  <v-dialog
+    v-model="showSettingsModal"
+    width="800"
+  >
+    <settings-modal @close-modal="showSettingsModal = false" />
   </v-dialog>
-  <v-dialog v-model="showReleaseNotesModal" width="500">
-    <release-notes-modal @closeModal="showSettingsModal = false" />
+  <v-dialog
+    v-model="showReleaseNotesModal"
+    width="500"
+  >
+    <release-notes-modal @close-modal="showSettingsModal = false" />
   </v-dialog>
 </template>
 <script lang="ts">

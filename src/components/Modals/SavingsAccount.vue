@@ -2,10 +2,17 @@
   <v-card>
     <v-card-text>
       <!-- show simple text for starting amount and monthly total -->
-      <info-card title="Savings Total" :amount="getSavingsTotal" />
-      <v-btn @click="openSavingsModal"> Withdraw</v-btn>
+      <info-card
+        title="Savings Total"
+        :amount="getSavingsTotal"
+      />
+      <v-btn @click="openSavingsModal">
+        Withdraw
+      </v-btn>
       <v-card class="sticky-note mx-0">
-        <v-card-title class="sticky-note-title">Account History</v-card-title>
+        <v-card-title class="sticky-note-title">
+          Account History
+        </v-card-title>
         <v-card-text class="pt-2">
           <v-data-table
             :loading="loadTableData"
@@ -15,27 +22,30 @@
             :items="selectedTimeframe?.savingsTransactions"
             items-per-page="20"
           >
-            <template v-slot:item.type="{ item }">
+            <template #[`item.type`]="{ item }">
               <td>
-                <v-chip :color="getChipColor(item.type)" size="small">
+                <v-chip
+                  :color="getChipColor(item.type)"
+                  size="small"
+                >
                   {{ item.type }}
                 </v-chip>
               </td>
             </template>
-            <template v-slot:item.actions="{ item }">
+            <template #[`item.actions`]="{ item }">
               <td class="d-flex justify-end">
                 <v-btn
                   size="x-small"
-                  @click="editItem(item)"
                   variant="flat"
                   icon="mdi-pencil"
-                ></v-btn>
+                  @click="editItem(item)"
+                />
                 <v-btn
                   size="x-small"
-                  @click="confirmDeleteTransaction(item)"
                   icon="mdi-trash-can"
                   variant="flat"
-                ></v-btn>
+                  @click="confirmDeleteTransaction(item)"
+                />
               </td>
             </template>
           </v-data-table>
@@ -44,19 +54,25 @@
     </v-card-text>
   </v-card>
 
-  <v-dialog v-model="showTransactionModal" width="500">
+  <v-dialog
+    v-model="showTransactionModal"
+    width="500"
+  >
     <transaction-modal
       :transaction="transaction"
-      @closeModal="showTransactionModal = !showTransactionModal"
-      @saveTransaction="saveTransaction"
+      @close-modal="showTransactionModal = !showTransactionModal"
+      @save-transaction="saveTransaction"
     />
   </v-dialog>
 
-  <v-dialog v-model="deleteTransactionModal" width="500">
+  <v-dialog
+    v-model="deleteTransactionModal"
+    width="500"
+  >
     <delete-transaction-modal
       :transaction="transaction"
-      @closeModal="deleteTransactionModal = !deleteTransactionModal"
-      @deleteTransaction="deleteTransaction"
+      @close-modal="deleteTransactionModal = !deleteTransactionModal"
+      @delete-transaction="deleteTransaction"
     />
   </v-dialog>
 </template>

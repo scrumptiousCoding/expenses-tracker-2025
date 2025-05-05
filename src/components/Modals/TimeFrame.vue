@@ -4,48 +4,50 @@
     :title="newTimeFrame ? 'Add New Timeframe' : 'Edit Timeframe'"
   >
     <v-card-text class="pb-0">
-      <v-form class="d-flex flex-wrap"
+      <v-form
+        ref="timeFrameForm"
         v-model="isFormValid"
-        ref="timeFrameForm" >
+        class="d-flex flex-wrap"
+      >
         <v-text-field
+          v-model="description"
           density="compact"
           variant="outlined"
           :rules="[rules.required]"
           label="Description"
           class="flex-1-1-100"
-          v-model="description"
-        ></v-text-field>
+        />
         <v-text-field
+          v-model="startingBalance"
           density="compact"
           type="number"
           variant="outlined"
           label="Account starting balance"
           class="flex-1-1-100"
-          v-model="startingBalance"
-        ></v-text-field>
+        />
         <v-text-field
+          v-model="savingsStartingBalance"
           density="compact"
           type="number"
           variant="outlined"
           label="Savings starting balance"
           class="flex-1-1-100"
-          v-model="savingsStartingBalance"
-        ></v-text-field>
+        />
         <div class="flex-1-0 mr-1">
           <v-date-picker
+            v-model="startDate"
             color="primary"
             width="100%"
-            v-model="startDate"
-            @update:modelValue="checkEndDate"
-          ></v-date-picker>
+            @update:model-value="checkEndDate"
+          />
         </div>
         <div class="flex-1-0 ml-1">
           <v-date-picker
+            v-model="endDate"
             color="primary"
             width="100%"
             :min="startDate"
-            v-model="endDate"
-          ></v-date-picker>
+          />
         </div>
       </v-form>
     </v-card-text>
@@ -56,14 +58,14 @@
         variant="outlined"
         color="error"
         @click="closeModal()"
-      ></v-btn>
+      />
       <v-btn
         class="mr-3"
         text="Save"
         variant="flat"
         color="primary"
         @click="addNewTimeframe"
-      ></v-btn>
+      />
     </v-card-actions>
   </v-card>
 </template>
@@ -112,9 +114,8 @@ class TimeFrameModal extends Vue {
   }
 
   addNewTimeframe() {
-    let refForm = this.$refs.timeFrameForm as HTMLFormElement;
-    let valid = refForm.validate();
-    if (this.isFormValid) {
+    const refForm = this.$refs.timeFrameForm as HTMLFormElement;
+    if (refForm.validate()) {
       if (this.newTimeFrame) {
         this.appStore.addNewTimeframe(
           this.description,

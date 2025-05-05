@@ -2,6 +2,14 @@ import { defineStore } from "pinia";
 import type { ICountryLocale } from "./interfaces/ICountryLocale";
 import axios from "axios";
 
+interface ILocaleResponse {
+  country: {
+    name: string;
+    currency_code: string;
+  };
+  locale: string;
+}
+
 export interface ISettingsStore {
   selectedCountry: ICountryLocale;
   countryLocaleList: ICountryLocale[];
@@ -20,15 +28,15 @@ export const useSettingsStore = defineStore("settingsStore", {
   actions: {
     getLocaleList() {
       axios
-        .get("https://cdn.simplelocalize.io/public/v1/locales")
+        .get<ILocaleResponse[]>("https://cdn.simplelocalize.io/public/v1/locales")
         .then((response) => {
-          let newCountryLocaleList: ICountryLocale[] = [];
-          response.data.forEach((item: any) => {
+          const newCountryLocaleList: ICountryLocale[] = [];
+          response.data.forEach((item: ILocaleResponse) => {
             if (item.country.currency_code !== "") {
-              let exsists = newCountryLocaleList.findIndex(
-                (x: any) => x.currencyCode === item.country.currency_code
+              const exists = newCountryLocaleList.findIndex(
+                (x: ICountryLocale) => x.currencyCode === item.country.currency_code
               );
-              if (exsists === -1) {
+              if (exists === -1) {
                 newCountryLocaleList.push({
                   countryName: item.country.name,
                   locale: item.locale,

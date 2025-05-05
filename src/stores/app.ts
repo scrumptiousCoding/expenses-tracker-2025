@@ -18,210 +18,168 @@ export const useAppStore = defineStore("app", {
     firstLoad: true,
   }),
   getters: {
-    getTotalIncome(state) {
-      let total: number = 0;
-      let filter = state.selectedTimeframe?.transaction.filter(
-        (x) => x.type === "Income"
-      );
-      if (filter !== undefined) {
-        for (let i = 0; i < filter.length; i++) {
-          const element = filter[i];
-          total += element.amount;
+    // Helper function to calculate transactions by type (not exposed as a getter)
+    _calculateTotalByType(): (type: string) => number {
+      return (type: string) => {
+        let total = 0
+        const transactions = this.selectedTimeframe?.transaction.filter(
+          (x) => x.type === type
+        ) || []
+        for (const transaction of transactions) {
+          total += transaction.amount
         }
+        return total
       }
-      return total;
     },
-    getTotalFixedExpenses(state) {
-      let total: number = 0;
-      let filter = state.selectedTimeframe?.transaction.filter(
-        (x) => x.type === "Fixed Expenses"
-      );
-      if (filter !== undefined) {
-        for (let i = 0; i < filter.length; i++) {
-          const element = filter[i];
-          total += element.amount;
-        }
-      }
-      return total;
+    
+    getTotalIncome(): number {
+      return this._calculateTotalByType("Income")
     },
-    getTotalOtherExpenses(state) {
-      let total: number = 0;
-      let filter = state.selectedTimeframe?.transaction.filter(
-        (x) => x.type === "Other Expenses"
-      );
-      if (filter !== undefined) {
-        for (let i = 0; i < filter.length; i++) {
-          const element = filter[i];
-          total += element.amount;
-        }
-      }
-      return total;
+    
+    getTotalFixedExpenses(): number {
+      return this._calculateTotalByType("Fixed Expenses")
     },
-    getCurrentTotalSavings(state) {
-      let total: number = 0;
-      let filter = state.selectedTimeframe?.transaction.filter(
-        (x) => x.type === "Savings"
-      );
-      if (filter !== undefined) {
-        for (let i = 0; i < filter.length; i++) {
-          const element = filter[i];
-          total += element.amount;
-        }
-      }
-      for (
-        let i = 0;
-        i < (state.selectedTimeframe?.savingsTransactions.length || 0);
-        i++
-      ) {
-        total -= state.selectedTimeframe?.savingsTransactions[i].amount || 0;
-      }
-      return total;
+    
+    getTotalOtherExpenses(): number {
+      return this._calculateTotalByType("Other Expenses")
     },
-    getTotalSavings(state) {
-      let total: number = 0;
-      let filter = state.selectedTimeframe?.transaction.filter(
-        (x) => x.type === "Savings"
-      );
-      if (filter !== undefined) {
-        for (let i = 0; i < filter.length; i++) {
-          const element = filter[i];
-          total += element.amount;
-        }
-      }
-      for (
-        let i = 0;
-        i < (state.selectedTimeframe?.savingsTransactions.length || 0);
-        i++
-      ) {
-        total -= state.selectedTimeframe?.savingsTransactions[i].amount || 0;
-      }
-
-      return total + (state.selectedTimeframe?.savingsStartingBalance || 0);
+    
+    getCurrentTotalSavings(): number {
+      const savingsDeposits = this._calculateTotalByType("Savings")
+      const savingsWithdrawals = this.selectedTimeframe?.savingsTransactions.reduce((total, transaction) => total + transaction.amount, 0) || 0
+      return savingsDeposits - savingsWithdrawals
+    },
+    
+    getTotalSavings(): number {
+      const currentSavings = this.getCurrentTotalSavings
+      const startingBalance = this.selectedTimeframe?.savingsStartingBalance || 0
+      return currentSavings + startingBalance
     },
   },
   actions: {
-    calculateTotal(type: string) {
-      let total: number = 0;
-      let filter = this.selectedTimeframe?.transaction.filter(
-        (x) => x.type === type
-      );
-      if (filter !== undefined) {
-        for (let i = 0; i < filter.length; i++) {
-          const element = filter[i];
-          total += element.amount;
-        }
-      }
-      return total;
+    calculateTotal(type: string): number {
+      return this._calculateTotalByType(type)
     },
+    
     addNewTimeframe(
       description: string,
       start: Date,
       end: Date,
       startingBalance: number,
       savingsStartingBalance: number
-    ) {
+    ): void {
       const newTf = {
-        description: description,
+        description,
         startDate: start,
         endDate: end,
-        startingBalance: startingBalance,
-        savingsStartingBalance: savingsStartingBalance,
+        startingBalance,
+        savingsStartingBalance,
         id: this.timeframes.length,
         transaction: [],
         savingsTransactions: [],
       };
-      this.timeframes.push(newTf);
-      this.selectedTimeframe = newTf;
+      this.timeframes.push(newTf)
+      this.selectedTimeframe = newTf
     },
+    
     editTimeframe(
       description: string,
       startDate: Date,
       endDate: Date,
       startingBalance: number,
       savingsStartingBalance: number
-    ) {
+    ): void {
       if (!this.selectedTimeframe) return;
-      this.selectedTimeframe.description = description;
-      this.selectedTimeframe.startDate = startDate;
-      this.selectedTimeframe.endDate = endDate;
-      this.selectedTimeframe.startingBalance = startingBalance;
-      this.selectedTimeframe.savingsStartingBalance = savingsStartingBalance;
+      
+      Object.assign(this.selectedTimeframe, {
+        description,
+        startDate,
+        endDate,
+        startingBalance,
+        savingsStartingBalance
+      })
     },
-    deleteTransaction(id: number) {
-      let indexedItem = this.selectedTimeframe?.transaction.findIndex(
-        (x) => x.id === id
-      );
-      if (indexedItem !== undefined) {
-        this.selectedTimeframe?.transaction.splice(indexedItem, 1);
-      } else {
-        //TODO: add error handling
+    
+    deleteTransaction(id: number): void {
+      if (!this.selectedTimeframe) return
+      const indexedItem = this.selectedTimeframe.transaction.findIndex(x => x.id === id)
+      if (indexedItem !== -1) {
+        this.selectedTimeframe.transaction.splice(indexedItem, 1)
+      }
+      // TODO: add error handling for else case
+    },
+    
+    setSelectedTimeframe(tf: ITimeframe): void {
+      this.selectedTimeframe = tf
+    },
+    
+    clearTimeframe(): void {
+      this.selectedTimeframe = null
+    },
+    
+    addDummyData(): void {
+      if (!this.selectedTimeframe) return
+      for (let i = 0; i < 5; i++) {
+        this.selectedTimeframe.transaction.push({
+          description: "Test " + i,
+          date: new Date(),
+          id: this.selectedTimeframe.transaction.length,
+          type: "Other Expenses",
+          amount: 1200.32,
+        })
       }
     },
-    setSelectedTimeframe(tf: ITimeframe) {
-      this.selectedTimeframe = tf;
+
+    addNewTransaction(transaction: ITransaction): void {
+      if (!this.selectedTimeframe) return
+      transaction.id = this.selectedTimeframe.transaction.length
+      this.selectedTimeframe.transaction.push(transaction)
     },
-    clearTimeframe() {
-      this.selectedTimeframe = null;
-    },
-    addDummyData() {
-      if (this.selectedTimeframe) {
-        for (let i = 0; i < 5; i++) {
-          this.selectedTimeframe.transaction.push({
-            description: "Test " + i,
-            date: new Date(),
-            id: this.selectedTimeframe.transaction.length,
-            type: "Other Expenses",
-            amount: 1200.32,
-          });
-        }
+    
+    updateTransaction(transaction: ITransaction): void {
+      if (!this.selectedTimeframe) return
+      const trans = this.selectedTimeframe.transaction.find(x => x.id === transaction.id)
+      if (trans) {
+        Object.assign(trans, {
+          description: transaction.description,
+          date: transaction.date,
+          amount: transaction.amount,
+          type: transaction.type
+        })
       }
     },
-    //new transactions on timeframe
-    addNewTransaction(transaction: ITransaction) {
-      transaction.id = this.selectedTimeframe!.transaction.length;
-      this.selectedTimeframe?.transaction.push(transaction);
-    },
-    updateTransaction(transaction: ITransaction) {
-      if (this.selectedTimeframe) {
-        const trans = this.selectedTimeframe.transaction.find( (x) => x.id === transaction.id );
-        if (trans) {
-          trans.description = transaction.description;
-          trans.date = transaction.date;
-          trans.amount = transaction.amount;
-          trans.type = transaction.type;
-        }
-      }
-    },
-    //savings transactions
-    removeSavings(transaction: ITransaction) {
-      this.selectedTimeframe?.savingsTransactions.push({
+    
+    removeSavings(transaction: ITransaction): void {
+      if (!this.selectedTimeframe) return
+      this.selectedTimeframe.savingsTransactions.push({
         description: transaction.description,
         date: transaction.date,
         type: transaction.type,
         amount: transaction.amount,
         id: this.selectedTimeframe.savingsTransactions.length + 1,
-      });
+      })
     },
-    updateSavingsTransactions(transaction: ITransaction) {
-      const trans = this.selectedTimeframe!.savingsTransactions.find(
-        (x) => x.id === transaction.id
-      );
+    
+    updateSavingsTransactions(transaction: ITransaction): void {
+      if (!this.selectedTimeframe) return;
+      const trans = this.selectedTimeframe.savingsTransactions.find(x => x.id === transaction.id)
       if (trans) {
-        trans.description = transaction.description;
-        trans.date = transaction.date;
-        trans.amount = transaction.amount;
-        trans.type = transaction.type;
+        Object.assign(trans, {
+          description: transaction.description,
+          date: transaction.date,
+          amount: transaction.amount,
+          type: transaction.type
+        })
       }
     },
-    removeTransactionFromSavings(transactionId: number) {
-      let indexedItem = this.selectedTimeframe?.savingsTransactions.findIndex(
-        (x) => x.id === transactionId
-      );
-      if (indexedItem !== undefined) {
-        this.selectedTimeframe?.savingsTransactions.splice(indexedItem, 1);
-      } else {
-        //TODO: add error handling
+    
+    removeTransactionFromSavings(transactionId: number): void {
+      if (!this.selectedTimeframe) return
+      const indexedItem = this.selectedTimeframe.savingsTransactions.findIndex(x => x.id === transactionId)
+      if (indexedItem !== -1) {
+        this.selectedTimeframe.savingsTransactions.splice(indexedItem, 1)
       }
+      // TODO: add error handling for else case
     },
   },
   persist: true,

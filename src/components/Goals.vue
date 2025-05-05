@@ -1,10 +1,10 @@
 <template>
-    <div>
-        <h1>Goals</h1>
-    </div>
+  <div>
+    <h1>Goals</h1>
+  </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
     name: 'Goals',
     data() {
@@ -12,14 +12,14 @@ export default {
             // Add your component data here
         };
     },
-    methods: {
-        // Add your component methods here
-    },
     computed: {
         // Add your computed properties here
     },
     mounted() {
         // Lifecycle hook when the component is mounted
+    },
+    methods: {
+        // Add your component methods here
     }
 };
 </script>
