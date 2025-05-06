@@ -162,7 +162,7 @@
             class="mt-2"
             color="info"
             density="compact"
-            text="This assumes that savings are in a seperate account and putting something in savings effectively removes it from your account, treating it like an expense. But without the bad colous attached to it"
+            text="This assumes that savings are in a seperate account and putting something in savings effectively removes it from your account, treating it like an expense. But without the bad colours attached to it"
           ></v-alert>
 
           <v-date-picker

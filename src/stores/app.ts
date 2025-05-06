@@ -133,6 +133,7 @@ export const useAppStore = defineStore("app", {
     addNewTransaction(transaction: ITransaction): void {
       if (!this.selectedTimeframe) return
       transaction.id = this.selectedTimeframe.transaction.length
+      transaction.amount = Number(transaction.amount)
       this.selectedTimeframe.transaction.push(transaction)
     },
     
@@ -143,7 +144,7 @@ export const useAppStore = defineStore("app", {
         Object.assign(trans, {
           description: transaction.description,
           date: transaction.date,
-          amount: transaction.amount,
+          amount: Number(transaction.amount),
           type: transaction.type
         })
       }
@@ -155,7 +156,7 @@ export const useAppStore = defineStore("app", {
         description: transaction.description,
         date: transaction.date,
         type: transaction.type,
-        amount: transaction.amount,
+        amount: Number(transaction.amount),
         id: this.selectedTimeframe.savingsTransactions.length + 1,
       })
     },
@@ -167,7 +168,7 @@ export const useAppStore = defineStore("app", {
         Object.assign(trans, {
           description: transaction.description,
           date: transaction.date,
-          amount: transaction.amount,
+          amount: Number(transaction.amount),
           type: transaction.type
         })
       }

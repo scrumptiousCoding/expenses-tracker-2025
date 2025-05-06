@@ -46,7 +46,7 @@
           class="mt-2"
           color="info"
           density="compact"
-          text="This assumes that savings are in a seperate account and putting something in savings effectively removes it from your account, treating it like an expense. But without the bad colous attached to it"
+          text="This assumes that savings are in a seperate account and putting something in savings effectively removes it from your account, treating it like an expense. But without the bad colours attached to it"
         />
 
         <v-date-picker
@@ -116,7 +116,8 @@ class TransactionModal extends Vue {
   }
   saveTransaction() {
     const refForm = this.$refs.form as HTMLFormElement;
-    if (refForm.validate()) {
+    refForm.validate();
+    if (this.isFormValid) {
       this.$emit("saveTransaction", this.transaction);
     }
   }

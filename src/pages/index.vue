@@ -7,7 +7,8 @@
     </v-row>
     <v-row v-if="!selectedTimeframe">
       <v-col class="text-center">
-        Please select a timeframe to view
+        <span v-if="appStore.timeframes.length > 0">Please select a timeframe to view </span>
+        <span v-else>Please create a timeframe</span>
       </v-col>
     </v-row>
     <div v-if="selectedTimeframe">
@@ -206,10 +207,12 @@ class IndexPage extends Vue {
     const otherExpenses = Number(this.appStore.calculateTotal("Other Expenses")) || 0
     const fixedExpenses = Number(this.appStore.calculateTotal("Fixed Expenses")) || 0
     const income = Number(this.appStore.calculateTotal("Income")) || 0
+    const savings = Number(this.appStore.calculateTotal("Savings")) || 0
 
     return (
       startingBalance -
       otherExpenses -
+      savings -
       fixedExpenses +
       income
     );

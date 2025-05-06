@@ -115,7 +115,8 @@ class TimeFrameModal extends Vue {
 
   addNewTimeframe() {
     const refForm = this.$refs.timeFrameForm as HTMLFormElement;
-    if (refForm.validate()) {
+    refForm.validate();
+    if (this.isFormValid) {
       if (this.newTimeFrame) {
         this.appStore.addNewTimeframe(
           this.description,
