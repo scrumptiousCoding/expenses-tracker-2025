@@ -60,7 +60,13 @@ export const useAppStore = defineStore("app", {
     calculateTotal(type: string): number {
       return this._calculateTotalByType(type)
     },
-    
+    addNewTransactionType(newTransactionType: string) {
+      this.transactionTypes.push(newTransactionType)
+    },
+    removeTransactionType(transactionIndex: number) {
+      console.log(transactionIndex)
+      this.transactionTypes.splice(transactionIndex, 1)
+    },
     addNewTimeframe(
       description: string,
       start: Date,

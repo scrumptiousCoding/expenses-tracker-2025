@@ -60,7 +60,9 @@ class ReleaseNotesModal extends Vue {
         "(1) Added conditional check for timeframes and if none are available it will read create",
         "(6) The anger happened cause the amounts was added together as strings, not as amounts. Fixed",
         "Transaction amount only allows number and periods as enterable values, this applies to starting numbers too",
-        "General ux update for smaller screens"
+        "General UX update for smaller screens",
+        "Settings now start with the country selected",
+        "Can now add and remove your own transaction type. (new savings type not included)"
       ]
     }
   ];
