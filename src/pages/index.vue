@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <div class="pa-4">
     <v-row>
       <v-col cols="12">
         <navigation-comp />
@@ -13,10 +13,10 @@
     </v-row>
     <div v-if="selectedTimeframe">
       <v-row>
-        <v-col cols="4">
+        <v-col md="4" sm="6">
           <Statistics />
         </v-col>
-        <v-col cols="4">
+        <v-col md="4" sm="6">
           <div v-if="graphStore.seriesData.length <= 0">
             Nothing here yet
           </div>
@@ -27,7 +27,7 @@
             :series="graphStore.seriesData"
           />
         </v-col>
-        <v-col cols="4">
+        <v-col md="4" sm="12">
           <v-card class="mb-3">
             <div class="bookmark-right" />
             <div class="card-border">
@@ -112,24 +112,24 @@
         </v-col>
       </v-row>
     </div>
+  </div>
 
-    <v-dialog
-      v-model="showTimeFrameModal"
-      width="800"
-    >
-      <time-frame-modal
-        :new-time-frame="false"
-        @close-modal="showTimeFrameModal = false"
-      />
-    </v-dialog>
+  <v-dialog
+    v-model="showTimeFrameModal"
+    width="800"
+  >
+    <time-frame-modal
+      :new-time-frame="false"
+      @close-modal="showTimeFrameModal = false"
+    />
+  </v-dialog>
 
-    <v-dialog
-      v-model="showSavingsModal"
-      width="800"
-    >
-      <savings-account-modal />
-    </v-dialog>
-  </v-container>
+  <v-dialog
+    v-model="showSavingsModal"
+    width="800"
+  >
+    <savings-account-modal />
+  </v-dialog>
 </template>
 <script lang="ts">
 import { Component, Vue, toNative } from "vue-facing-decorator";

@@ -15,7 +15,7 @@ const app = createApp(App)
 
 pinia.use(piniaPluginPersistedstate)
 app.use(pinia)
-app.use(VueApexCharts);
+app.use(VueApexCharts)
 registerPlugins(app)
 
 app.mount('#app')

@@ -21,6 +21,7 @@
           v-model="startingBalance"
           density="compact"
           type="number"
+          :rules="[rules.numbersOnly]"
           variant="outlined"
           label="Account starting balance"
           class="flex-1-1-100"
@@ -30,6 +31,7 @@
           density="compact"
           type="number"
           variant="outlined"
+          :rules="[rules.numbersOnly]"
           label="Savings starting balance"
           class="flex-1-1-100"
         />
@@ -86,6 +88,7 @@ class TimeFrameModal extends Vue {
   isFormValid = null;
   rules = {
     required: (value: string) => !!value || "This field is required",
+    numbersOnly: (value: any) => /^[0-9]+([\.][0-9]+)?$/.test(value) || "Only numerical values and a . are allowed"
   };
 
   get appStore() {

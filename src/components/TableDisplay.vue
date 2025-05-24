@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col cols="2">
+    <v-col lg="2" md="3" sm="4">
       <v-card class="mt-0 mb-3 sticky-note mx-0">
         <v-card-title class="sticky-note-title mb-2">
           History Breakdown
@@ -10,7 +10,7 @@
             v-model="filterType"
             density="compact"
             variant="outlined"
-            label="Search"
+            label="Filter Description"
             hide-details="auto"
             class="flex-1-1-100 mb-2"
             clearable
@@ -72,7 +72,7 @@
         </v-card-text>
       </v-card>
     </v-col>
-    <v-col cols="10">
+    <v-col lg="10" md="9" sm="8">
       <v-card>
         <v-data-table
           :loading="loadTableData"

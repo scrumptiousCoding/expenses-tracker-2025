@@ -59,6 +59,8 @@ class ReleaseNotesModal extends Vue {
         "Test document fixes as per indication (3, 4, 5, 7)",
         "(1) Added conditional check for timeframes and if none are available it will read create",
         "(6) The anger happened cause the amounts was added together as strings, not as amounts. Fixed",
+        "Transaction amount only allows number and periods as enterable values, this applies to starting numbers too",
+        "General ux update for smaller screens"
       ]
     }
   ];
