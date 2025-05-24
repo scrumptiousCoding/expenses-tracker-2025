@@ -45,6 +45,7 @@ class TimeFrameModal extends Vue {
 
   mounted() {
     this.fetchLocaleInformation();
+    this.selectedCountry = this.settingsStore.selectedCountry
   }
 
   selectCountry(country: ICountryLocale) {
