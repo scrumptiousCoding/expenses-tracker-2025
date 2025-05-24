@@ -9,7 +9,8 @@
             "General UX update for smaller screens",
             "Settings now start with the country selected",
             "Can now add and remove your own transaction type. (new savings type not included)",
-            "Changed how release notes are stored and displayed"
+            "Changed how release notes are stored and displayed",
+            "Added custom font to major headings, and update general font on site"
         ]
     },
     {

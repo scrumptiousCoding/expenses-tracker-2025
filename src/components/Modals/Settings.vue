@@ -1,11 +1,11 @@
 <template>
   <v-card>
-    <v-card-title>
+    <v-card-title class="pb-0">
       <div class="ribbon-corner" />
       <div class="ribbon-corner-secondary" />
       <h1>Settings</h1>
     </v-card-title>
-    <v-card-text>
+    <v-card-text class="pt-0 px-2">
       <v-card class="sticky-note">
         <v-card-title class="sticky-note-title">
           Settings

@@ -9,9 +9,13 @@
 //   $color-pack: false
 // );
 
+
 @forward "vuetify/settings" with (
   $layers: true
 );
+body{
+  font-family: 'Atkinson Hyperlegible', sans-serif;
+}
 
 .bg-variant-gradient {
   // background-image: linear-gradient(#c3f5f6, #e2c7f4);
@@ -80,7 +84,7 @@
 }
 
 h1 {
-  font-family: "Brush Script MT", cursive;
+  font-family: 'Rouge Script', cursive;
 }
 
 .sticky-note {
