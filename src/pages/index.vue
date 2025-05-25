@@ -217,7 +217,6 @@ class IndexPage extends Vue {
       income
     );
   }
-
   showModal() {
     this.showTimeFrameModal = true;
   }

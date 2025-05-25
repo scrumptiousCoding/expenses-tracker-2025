@@ -54,8 +54,11 @@
       </v-form>
     </v-card-text>
     <v-card-actions class="mb-3 mx-1">
+      <v-btn color="error" class="ml-3" @click="deleteTimeframe" v-if="!newTimeFrame">
+        Delete Timeframe
+      </v-btn>
+      <v-spacer />
       <v-btn
-        class="mr2"
         text="Cancel"
         variant="outlined"
         color="error"
@@ -143,6 +146,11 @@ class TimeFrameModal extends Vue {
 
   closeModal() {
     this.$emit("closeModal");
+  }
+
+  deleteTimeframe() {
+    this.appStore.deleteTimeframe();
+    this.closeModal();
   }
 }
 export default toNative(TimeFrameModal);

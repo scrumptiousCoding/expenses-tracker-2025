@@ -64,7 +64,6 @@ export const useAppStore = defineStore("app", {
       this.transactionTypes.push(newTransactionType)
     },
     removeTransactionType(transactionIndex: number) {
-      console.log(transactionIndex)
       this.transactionTypes.splice(transactionIndex, 1)
     },
     addNewTimeframe(
@@ -74,20 +73,20 @@ export const useAppStore = defineStore("app", {
       startingBalance: number,
       savingsStartingBalance: number
     ): void {
+      const newId = this.timeframes.length > 0 ? this.timeframes[this.timeframes.length-1].id + 1 : 1;
       const newTf = {
         description,
         startDate: start,
         endDate: end,
         startingBalance,
         savingsStartingBalance,
-        id: this.timeframes.length,
+        id: newId,
         transaction: [],
         savingsTransactions: [],
       };
       this.timeframes.push(newTf)
       this.selectedTimeframe = newTf
     },
-    
     editTimeframe(
       description: string,
       startDate: Date,
@@ -105,6 +104,14 @@ export const useAppStore = defineStore("app", {
         savingsStartingBalance
       })
     },
+    deleteTimeframe(): void {
+      if (!this.selectedTimeframe) return
+      const indexedItem = this.timeframes.findIndex(x => x.id === this.selectedTimeframe!.id)
+      if (indexedItem !== -1) {
+        this.timeframes.splice(indexedItem, 1)
+        this.selectedTimeframe = null
+      }
+    },
     
     deleteTransaction(id: number): void {
       if (!this.selectedTimeframe) return
@@ -112,7 +119,6 @@ export const useAppStore = defineStore("app", {
       if (indexedItem !== -1) {
         this.selectedTimeframe.transaction.splice(indexedItem, 1)
       }
-      // TODO: add error handling for else case
     },
     
     setSelectedTimeframe(tf: ITimeframe): void {
