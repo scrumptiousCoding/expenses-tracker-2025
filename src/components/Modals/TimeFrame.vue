@@ -54,7 +54,7 @@
       </v-form>
     </v-card-text>
     <v-card-actions class="mb-3 mx-1">
-      <v-btn color="error" class="ml-3" @click="deleteTimeframe" v-if="!newTimeFrame">
+      <v-btn color="error" class="ml-3" @click="showConfirmationModal = !showConfirmationModal" v-if="!newTimeFrame">
         Delete Timeframe
       </v-btn>
       <v-spacer />
@@ -73,6 +73,28 @@
       />
     </v-card-actions>
   </v-card>
+
+  
+  <v-dialog
+    v-model="showConfirmationModal"
+    width="400"
+  >
+  <v-card>
+    <v-card-title>
+      <v-icon size="small">mdi-alert-box</v-icon>
+      Warning!
+    </v-card-title>
+    <v-card-text>
+      You are about to delete a timeframe, this action is not reversible. 
+        <span class="font-weight-bold">Do you want to delete anyway?</span>
+    </v-card-text>
+    <v-card-actions>
+      <v-btn @click="showConfirmationModal = !showConfirmationModal" color="error" variant="outlined">Cancel</v-btn>
+      <v-btn @click="deleteTimeframe()" color="primary" variant="flat">Delete</v-btn>
+    </v-card-actions>
+  </v-card>
+  </v-dialog>
+
 </template>
 
 <script lang="ts">
@@ -89,6 +111,8 @@ class TimeFrameModal extends Vue {
   startingBalance: string = "0";
   savingsStartingBalance: string = "0";
   isFormValid = null;
+  showConfirmationModal: boolean = false;
+
   rules = {
     required: (value: string) => !!value || "This field is required",
     numbersOnly: (value: any) => /^[0-9]+([\.][0-9]+)?$/.test(value) || "Only numerical values and a . are allowed"
@@ -149,6 +173,7 @@ class TimeFrameModal extends Vue {
   }
 
   deleteTimeframe() {
+    this.showConfirmationModal = false
     this.appStore.deleteTimeframe();
     this.closeModal();
   }
