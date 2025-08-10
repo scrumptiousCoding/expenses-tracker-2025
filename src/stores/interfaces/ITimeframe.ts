@@ -5,6 +5,7 @@ export interface ITimeframe {
     startDate: Date
     endDate: Date
     id: number
+    backedUp?: boolean
 
     transaction: ITransaction[]
     savingsTransactions: ITransaction[]

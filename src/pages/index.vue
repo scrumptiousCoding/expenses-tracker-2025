@@ -178,7 +178,6 @@ class IndexPage extends Vue {
   showSavingsModal = false;
 
   mounted() {
-    console.log("Main page mounted");
     this.appStore.clearTimeframe();
   }
 

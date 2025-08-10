@@ -57,6 +57,14 @@ export const useAppStore = defineStore("app", {
     },
   },
   actions: {
+    markItemsAsBackedUp(list: Array<number>) {
+      for (const id of list) {
+        const timeframe = this.timeframes.find(tf => tf.id === id);
+        if (timeframe) {
+          timeframe.backedUp = true;
+        }
+      }
+    },
     calculateTotal(type: string): number {
       return this._calculateTotalByType(type)
     },

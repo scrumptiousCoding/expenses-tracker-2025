@@ -11,7 +11,8 @@
             "Can now add and remove your own transaction type. (new savings type not included)",
             "Changed how release notes are stored and displayed",
             "Added custom font to major headings, and update general font on site",
-            "Added feature to delete timeframes"
+            "Added feature to delete timeframes",
+            "Added backup feature"
         ]
     },
     {

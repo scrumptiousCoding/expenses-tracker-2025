@@ -36,7 +36,7 @@ import { useSettingsStore } from "@/stores/settingsStore";
 import type { ITransaction } from "@/stores/interfaces/ITimeframe";
 import { Component, Prop, Vue, toNative } from "vue-facing-decorator";
 @Component
-class TransactionModal extends Vue {
+class DeleteTransactionModal extends Vue {
   @Prop({ required: true }) transaction!: ITransaction;
   get settingsStore() {
     return useSettingsStore();
@@ -48,5 +48,5 @@ class TransactionModal extends Vue {
     this.$emit("deleteTransaction");
   }
 }
-export default toNative(TransactionModal);
+export default toNative(DeleteTransactionModal);
 </script>

@@ -5,14 +5,11 @@
  */
 
 // https://vuetifyjs.com/features/sass-variables/`
-// @use 'vuetify/settings' with (
-//   $color-pack: false
-// );
-
 
 @forward "vuetify/settings" with (
   $layers: true
 );
+
 body{
   font-family: 'Atkinson Hyperlegible', sans-serif;
 }

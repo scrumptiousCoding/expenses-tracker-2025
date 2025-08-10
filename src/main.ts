@@ -1,6 +1,7 @@
 // Plugins
 import { registerPlugins } from '@/plugins'
 import VueApexCharts from "vue3-apexcharts";
+import Notifications from '@kyvg/vue3-notification'
 
 // Components
 import App from './App.vue'
@@ -14,12 +15,14 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import '@fontsource/rouge-script';
 import '@fontsource/atkinson-hyperlegible';
 
+
 const pinia = createPinia()
 const app = createApp(App)
 
 pinia.use(piniaPluginPersistedstate)
 app.use(pinia)
 app.use(VueApexCharts)
+app.use(Notifications);
 registerPlugins(app)
 
 app.mount('#app')
