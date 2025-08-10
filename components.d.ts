@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Achievements: typeof import('./src/components/Achievements.vue')['default']
+    DeleteTimeframe: typeof import('./src/components/Modals/DeleteTimeframe.vue')['default']
     DeleteTransaction: typeof import('./src/components/Modals/DeleteTransaction.vue')['default']
     Goals: typeof import('./src/components/Goals.vue')['default']
     InfoCard: typeof import('./src/components/InfoCard.vue')['default']
@@ -17,9 +18,11 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     SavingsAccount: typeof import('./src/components/Modals/SavingsAccount.vue')['default']
     Settings: typeof import('./src/components/Modals/Settings.vue')['default']
+    Sidebar: typeof import('./src/components/Sidebar.vue')['default']
     Statistics: typeof import('./src/components/Statistics.vue')['default']
     TableDisplay: typeof import('./src/components/TableDisplay.vue')['default']
     TimeFrame: typeof import('./src/components/Modals/TimeFrame.vue')['default']
     Transaction: typeof import('./src/components/Modals/Transaction.vue')['default']
+    WelcomeNotice: typeof import('./src/components/Modals/WelcomeNotice.vue')['default']
   }
 }
