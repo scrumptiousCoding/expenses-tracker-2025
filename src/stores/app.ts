@@ -137,19 +137,6 @@ export const useAppStore = defineStore("app", {
       this.selectedTimeframe = null
     },
     
-    addDummyData(): void {
-      if (!this.selectedTimeframe) return
-      for (let i = 0; i < 5; i++) {
-        this.selectedTimeframe.transaction.push({
-          description: "Test " + i,
-          date: new Date(),
-          id: this.selectedTimeframe.transaction.length,
-          type: "Other Expenses",
-          amount: 1200.32,
-        })
-      }
-    },
-
     addNewTransaction(transaction: ITransaction): void {
       if (!this.selectedTimeframe) return
       transaction.id = this.selectedTimeframe.transaction.length
