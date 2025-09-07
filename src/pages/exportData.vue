@@ -98,7 +98,10 @@ class exportData extends Vue {
         }
         let fileName = 'ExpensesExport'
         if (this.customFileName !== '' && this.customFileName && this.customFileName !== undefined) fileName = this.customFileName
-        const json = this.timeframes.filter((tf: ITimeframe) => this.selected.includes(tf.id));
+        const json = {
+            version: '0.1',
+            timeframes: this.timeframes.filter((tf: ITimeframe) => this.selected.includes(tf.id))
+        };
 
         //json to string and string written to file
         const blob = new Blob([JSON.stringify(json)], { type: 'application/json' });
