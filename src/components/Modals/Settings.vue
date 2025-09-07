@@ -31,6 +31,7 @@
         <v-card-text class="pt-2">
           <v-text-field
             label="New Expendature Type"
+            density="compact"
             v-model="newExpendature"
             variant="outlined"
             append-inner-icon="mdi-plus"

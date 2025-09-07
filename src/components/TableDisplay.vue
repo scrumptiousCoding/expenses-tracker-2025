@@ -30,7 +30,7 @@
                   clearable
                 ></v-select>
               </v-col>
-              <v-col cols="auto" class="text-right py-0">
+              <v-col cols="auto" class="text-right py-0 align-self-center">
                 <v-btn
                 density="compact"
                 size="large"
