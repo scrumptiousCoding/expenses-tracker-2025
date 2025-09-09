@@ -29,9 +29,9 @@
                 <v-card-text>
                     <v-row>
                         <v-col class="text-right">
-                            <v-btn @click="importThatData()"
+                            <v-btn @click="importData()"
                             variant="flat"
-                            color="secondary">Looks good!</v-btn>
+                            color="secondary">Data is good!</v-btn>
                         </v-col>
                     </v-row>
                 </v-card-text>
@@ -115,7 +115,7 @@ import { Component, Vue, toNative } from "vue-facing-decorator";
 class importData extends Vue {
     fileImport: any = null
     loadTableData: boolean = false;
-    newInfo: any = []
+    newInfo: any = null
     headers = [
         {
             title: "Date",
@@ -167,8 +167,9 @@ class importData extends Vue {
         }
     }
 
-    importThatData() {
+    importData() {
         this.appStore.addNewTimeFrameFromImport(this.newInfo.timeframes)
+        this.appStore.importMissingTransactionTypes(this.newInfo.transactionTypes)
         this.$notify?.({ type: 'success', text: 'Import succeeded' });
     }
     

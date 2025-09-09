@@ -198,6 +198,15 @@ export const useAppStore = defineStore("app", {
         const newTf = { ...tf, id: lastId };
         this.timeframes.push(newTf);
       }
+    },
+
+    importMissingTransactionTypes(transactionTypes: any) {
+      if (!Array.isArray(transactionTypes)) return;
+      for (const type of transactionTypes) {
+        if (typeof type === "string" && !this.transactionTypes.includes(type)) {
+          this.transactionTypes.push(type);
+        }
+      }
     }
   },
   persist: true,
