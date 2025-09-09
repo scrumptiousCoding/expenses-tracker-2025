@@ -35,22 +35,22 @@
           label="Savings starting balance"
           class="flex-1-1-100"
         />
-        <div class="flex-1-0 mr-1">
-          <v-date-picker
-            v-model="startDate"
-            color="primary"
-            width="100%"
-            @update:model-value="checkEndDate"
-          />
-        </div>
-        <div class="flex-1-0 ml-1">
-          <v-date-picker
-            v-model="endDate"
-            color="primary"
-            width="100%"
-            :min="startDate"
-          />
-        </div>
+        <v-row>
+          <v-col cols="6">
+            <v-date-picker
+              v-model="startDate" width="100%"
+              color="primary" show-adjacent-months
+              @update:model-value="checkEndDate"
+            />
+          </v-col>
+          <v-col cols="6">
+            <v-date-picker
+              v-model="endDate" width="100%"
+              color="primary" show-adjacent-months
+              :min="startDate"
+            />
+          </v-col>
+        </v-row>
       </v-form>
     </v-card-text>
     <v-card-actions class="mb-3 mx-1">

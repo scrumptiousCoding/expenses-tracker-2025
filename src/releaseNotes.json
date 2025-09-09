@@ -3,7 +3,8 @@
         "version" : "0.4.0",
         "notes" : [
             "Updated UI elements",
-            "Added import data feature"
+            "Added import data feature",
+            "Updated the export to include verion and data for savings types"
         ]
     },
     {
