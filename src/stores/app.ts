@@ -189,6 +189,16 @@ export const useAppStore = defineStore("app", {
       }
       // TODO: add error handling for else case
     },
+
+    addNewTimeFrameFromImport(timeframes: ITimeframe): void{
+      if (!Array.isArray(timeframes)) return;
+      let lastId = this.timeframes.length > 0 ? this.timeframes[this.timeframes.length - 1].id : 0;
+      for (const tf of timeframes) {
+        lastId += 1;
+        const newTf = { ...tf, id: lastId };
+        this.timeframes.push(newTf);
+      }
+    }
   },
   persist: true,
 });
