@@ -121,7 +121,14 @@ export const useAppStore = defineStore("app", {
         this.selectedTimeframe = null
       }
     },
-    
+    deleteSavingsTransaction(id: number) {
+      if (!this.selectedTimeframe) return;
+      const index = this.selectedTimeframe.savingsTransactions.findIndex(x => x.id === id);
+      if (index !== -1) {
+        this.selectedTimeframe.savingsTransactions.splice(index, 1);
+        this.selectedTimeframe.backedUp = false;
+      }
+    },
     deleteTransaction(id: number): void {
       if (!this.selectedTimeframe) return
       const indexedItem = this.selectedTimeframe.transaction.findIndex(x => x.id === id)
