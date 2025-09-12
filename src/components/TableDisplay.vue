@@ -138,16 +138,20 @@ class TableDisplay extends Vue {
   };
   deleteTransactionModal: boolean = false;
 
-  formatAmount(item: ITransaction) {
-    return this.$settingsStore.currencyFormatting(item.amount);
+  formatAmount(item: unknown) {
+    if (!item || typeof item !== 'object' || !('amount' in item)) return '';
+    const tx = item as ITransaction;
+    return this.$settingsStore.currencyFormatting(tx.amount);
   }
 
   headers = [
     {
       title: "Date",
       key: "date",
-      value: (item: ITransaction) => {
-        return new Date(item.date).toLocaleDateString();
+      value: (item: unknown) => {
+        if (!item || typeof item !== 'object' || !('date' in item)) return '';
+        const tx = item as ITransaction;
+        return new Date(tx.date).toLocaleDateString();
       },
     },
     { title: "Description", value: "description" },
@@ -155,7 +159,7 @@ class TableDisplay extends Vue {
     {
       title: "Amount",
       key: "amount",
-      value: (item: ITransaction) => this.formatAmount(item),
+      value: (item: unknown) => this.formatAmount(item),
     },
     { title: "", key: "actions"},
   ];
