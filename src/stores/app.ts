@@ -88,6 +88,7 @@ export const useAppStore = defineStore("app", {
         endDate: end,
         startingBalance,
         savingsStartingBalance,
+        backedUp: false,
         id: newId,
         transaction: [],
         savingsTransactions: [],
@@ -103,13 +104,13 @@ export const useAppStore = defineStore("app", {
       savingsStartingBalance: number
     ): void {
       if (!this.selectedTimeframe) return;
-      
       Object.assign(this.selectedTimeframe, {
-        description,
-        startDate,
-        endDate,
-        startingBalance,
-        savingsStartingBalance
+        description: description,
+        startDate: startDate,
+        endDate: endDate,
+        startingBalance: startingBalance,
+        savingsStartingBalance: savingsStartingBalance,
+        backedUp: false
       })
     },
     deleteTimeframe(): void {
@@ -126,6 +127,7 @@ export const useAppStore = defineStore("app", {
       const indexedItem = this.selectedTimeframe.transaction.findIndex(x => x.id === id)
       if (indexedItem !== -1) {
         this.selectedTimeframe.transaction.splice(indexedItem, 1)
+        this.selectedTimeframe.backedUp = false
       }
     },
     
@@ -142,6 +144,7 @@ export const useAppStore = defineStore("app", {
       transaction.id = this.selectedTimeframe.transaction.length
       transaction.amount = Number(transaction.amount)
       this.selectedTimeframe.transaction.push(transaction)
+      this.selectedTimeframe.backedUp = false
     },
     
     updateTransaction(transaction: ITransaction): void {
@@ -154,6 +157,7 @@ export const useAppStore = defineStore("app", {
           amount: Number(transaction.amount),
           type: transaction.type
         })
+        this.selectedTimeframe.backedUp = false
       }
     },
     
@@ -166,6 +170,7 @@ export const useAppStore = defineStore("app", {
         amount: Number(transaction.amount),
         id: this.selectedTimeframe.savingsTransactions.length + 1,
       })
+      this.selectedTimeframe.backedUp = false
     },
     
     updateSavingsTransactions(transaction: ITransaction): void {
@@ -179,6 +184,7 @@ export const useAppStore = defineStore("app", {
           type: transaction.type
         })
       }
+      this.selectedTimeframe.backedUp = false
     },
     
     removeTransactionFromSavings(transactionId: number): void {
@@ -186,6 +192,7 @@ export const useAppStore = defineStore("app", {
       const indexedItem = this.selectedTimeframe.savingsTransactions.findIndex(x => x.id === transactionId)
       if (indexedItem !== -1) {
         this.selectedTimeframe.savingsTransactions.splice(indexedItem, 1)
+        this.selectedTimeframe.backedUp = false
       }
       // TODO: add error handling for else case
     },
