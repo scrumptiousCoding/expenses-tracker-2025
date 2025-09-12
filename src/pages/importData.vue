@@ -71,10 +71,10 @@
                         <template #[`item.type`]="{ item }">
                         <td>
                             <v-chip
-                            :color="getChipColor(item.type)"
+                            :color="getChipColor((item as ITransaction).type)"
                             size="small"
                             >
-                            {{ item.type }}
+                            {{ (item as ITransaction).type }}
                             </v-chip>
                         </td>
                         </template>
@@ -91,10 +91,10 @@
                         <template #[`item.type`]="{ item }">
                             <td>
                             <v-chip
-                                :color="getChipColor(item.type)"
+                                :color="getChipColor((item as ITransaction).type)"
                                 size="small"
                             >
-                                {{ item.type }} 
+                                {{ (item as ITransaction).type }}
                             </v-chip>
                             </td>
                         </template>
