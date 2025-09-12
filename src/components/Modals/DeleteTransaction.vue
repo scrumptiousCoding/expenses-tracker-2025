@@ -9,7 +9,7 @@
         <span class="font-weight-bold">{{ transaction.description }}</span>
         with a total of
         <span class="font-weight-bold">
-          {{ settingsStore.currencyFormatting(transaction.amount) }} </span>?
+          {{ $settingsStore.currencyFormatting(transaction.amount) }} </span>?
       </p>
     </v-card-text>
     <v-card-actions class="mb-3 mx-1">
@@ -32,15 +32,11 @@
 </template>
 
 <script lang="ts">
-import { useSettingsStore } from "@/stores/settingsStore";
 import type { ITransaction } from "@/stores/interfaces/ITimeframe";
 import { Component, Prop, Vue, toNative } from "vue-facing-decorator";
 @Component
 class DeleteTransactionModal extends Vue {
   @Prop({ required: true }) transaction!: ITransaction;
-  get settingsStore() {
-    return useSettingsStore();
-  }
   closeModal() {
     this.$emit("closeModal");
   }

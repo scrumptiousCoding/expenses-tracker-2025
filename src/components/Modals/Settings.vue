@@ -16,7 +16,7 @@
             label="Country"
             variant="outlined"
             density="compact"
-            :items="settingsStore.countryLocaleList"
+            :items="$settingsStore.countryLocaleList"
             item-title="countryName"
             :return-object="true"
             @update:model-value="selectCountry"
@@ -48,7 +48,6 @@
 <script lang="ts">
 import { Component, Vue, toNative } from "vue-facing-decorator";
 import { useAppStore } from "@/stores/app";
-import { useSettingsStore } from "@/stores/settingsStore";
 import type { ICountryLocale } from "@/stores/interfaces/ICountryLocale";
 
 @Component
@@ -59,20 +58,17 @@ class TimeFrameModal extends Vue {
   get appStore() {
     return useAppStore();
   }
-  get settingsStore() {
-    return useSettingsStore();
-  }
 
   mounted() {
     this.fetchLocaleInformation();
-    this.selectedCountry = this.settingsStore.selectedCountry
+    this.selectedCountry = this.$settingsStore.selectedCountry
   }
 
   selectCountry(country: ICountryLocale) {
-    this.settingsStore.setSelectedCountry(country);
+    this.$settingsStore.setSelectedCountry(country);
   }
   fetchLocaleInformation() {
-    this.settingsStore.getLocaleList();
+    this.$settingsStore.getLocaleList();
   }
   addNewTransactionType() {
     this.appStore.addNewTransactionType(this.newExpendature)

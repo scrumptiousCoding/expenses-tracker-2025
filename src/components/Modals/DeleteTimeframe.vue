@@ -16,13 +16,9 @@
 </template>
 
 <script lang="ts">
-import { useSettingsStore } from "@/stores/settingsStore";
 import { Component, Prop, Vue, toNative } from "vue-facing-decorator";
 @Component
 class DeleteTimeframeModal extends Vue {
-  get settingsStore() {
-    return useSettingsStore();
-  }
   closeModal() {
     this.$emit("closeModal");
   }

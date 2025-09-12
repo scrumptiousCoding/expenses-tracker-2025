@@ -114,7 +114,6 @@
 <script lang="ts">
 import { useAppStore } from "@/stores/app";
 import { useGraphStore } from "@/stores/graphStore";
-import { useSettingsStore } from "@/stores/settingsStore";
 import type { ITransaction } from "@/stores/interfaces/ITimeframe";
 import { Component, Vue, toNative } from "vue-facing-decorator";
 import TransactionModal from "@/components/Modals/Transaction.vue";
@@ -139,6 +138,10 @@ class TableDisplay extends Vue {
   };
   deleteTransactionModal: boolean = false;
 
+  formatAmount(item: ITransaction) {
+    return this.$settingsStore.currencyFormatting(item.amount);
+  }
+
   headers = [
     {
       title: "Date",
@@ -152,9 +155,7 @@ class TableDisplay extends Vue {
     {
       title: "Amount",
       key: "amount",
-      value: (item: ITransaction) => {
-        return this.settingsStore.currencyFormatting(item.amount);
-      },
+      value: (item: ITransaction) => this.formatAmount(item),
     },
     { title: "", key: "actions"},
   ];
@@ -166,9 +167,6 @@ class TableDisplay extends Vue {
   }
   get graphStore() {
     return useGraphStore();
-  }
-  get settingsStore() {
-    return useSettingsStore()
   }
   get selectedTimeframe() {
     return this.appStore.selectedTimeframe;

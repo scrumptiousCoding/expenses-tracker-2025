@@ -52,10 +52,10 @@
                             <label>End Date: </label> <span>{{ new Date(timeframe.endDate).toLocaleDateString() }}</span>
                         </v-col>
                         <v-col>
-                            <label>Starting Balance: </label> <span>{{ settingsStore.currencyFormatting(timeframe.startingBalance) }}</span>
+                            <label>Starting Balance: </label> <span>{{ $settingsStore.currencyFormatting(timeframe.startingBalance) }}</span>
                         </v-col>
                         <v-col>
-                            <label>Savings Starting Balance: </label> <span>{{ settingsStore.currencyFormatting(timeframe.savingsStartingBalance) }}</span>
+                            <label>Savings Starting Balance: </label> <span>{{ $settingsStore.currencyFormatting(timeframe.savingsStartingBalance) }}</span>
                         </v-col>
                     </v-row>
 
@@ -107,7 +107,6 @@
 </template>
 <script lang="ts">
 import { useAppStore } from "@/stores/app";
-import { useSettingsStore } from "@/stores/settingsStore";
 import type { ITimeframe, ITransaction } from "@/stores/interfaces/ITimeframe";
 import { Component, Vue, toNative } from "vue-facing-decorator";
 
@@ -116,6 +115,11 @@ class importData extends Vue {
     fileImport: any = null
     loadTableData: boolean = false;
     newInfo: any = null
+
+    formatAmount(item: ITransaction) {
+        return this.$settingsStore.currencyFormatting(item.amount);
+    }
+
     headers = [
         {
             title: "Date",
@@ -129,9 +133,7 @@ class importData extends Vue {
         {
             title: "Amount",
             key: "amount",
-            value: (item: ITransaction) => {
-                return this.settingsStore.currencyFormatting(item.amount);
-            },
+            value: (item: ITransaction) => this.formatAmount(item),
         },
         { title: "", key: "actions"}
     ];
@@ -139,9 +141,6 @@ class importData extends Vue {
     get appStore() {
         return useAppStore();
     } 
-    get settingsStore() {
-        return useSettingsStore()
-    }
 
     readFile(){
         this.loadTableData = true
