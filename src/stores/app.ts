@@ -88,6 +88,7 @@ export const useAppStore = defineStore("app", {
         endDate: end,
         startingBalance,
         savingsStartingBalance,
+        backedUp: false,
         id: newId,
         transaction: [],
         savingsTransactions: [],
@@ -103,13 +104,13 @@ export const useAppStore = defineStore("app", {
       savingsStartingBalance: number
     ): void {
       if (!this.selectedTimeframe) return;
-      
       Object.assign(this.selectedTimeframe, {
-        description,
-        startDate,
-        endDate,
-        startingBalance,
-        savingsStartingBalance
+        description: description,
+        startDate: startDate,
+        endDate: endDate,
+        startingBalance: startingBalance,
+        savingsStartingBalance: savingsStartingBalance,
+        backedUp: false
       })
     },
     deleteTimeframe(): void {
@@ -120,12 +121,20 @@ export const useAppStore = defineStore("app", {
         this.selectedTimeframe = null
       }
     },
-    
+    deleteSavingsTransaction(id: number) {
+      if (!this.selectedTimeframe) return;
+      const index = this.selectedTimeframe.savingsTransactions.findIndex(x => x.id === id);
+      if (index !== -1) {
+        this.selectedTimeframe.savingsTransactions.splice(index, 1);
+        this.selectedTimeframe.backedUp = false;
+      }
+    },
     deleteTransaction(id: number): void {
       if (!this.selectedTimeframe) return
       const indexedItem = this.selectedTimeframe.transaction.findIndex(x => x.id === id)
       if (indexedItem !== -1) {
         this.selectedTimeframe.transaction.splice(indexedItem, 1)
+        this.selectedTimeframe.backedUp = false
       }
     },
     
@@ -137,24 +146,12 @@ export const useAppStore = defineStore("app", {
       this.selectedTimeframe = null
     },
     
-    addDummyData(): void {
-      if (!this.selectedTimeframe) return
-      for (let i = 0; i < 5; i++) {
-        this.selectedTimeframe.transaction.push({
-          description: "Test " + i,
-          date: new Date(),
-          id: this.selectedTimeframe.transaction.length,
-          type: "Other Expenses",
-          amount: 1200.32,
-        })
-      }
-    },
-
     addNewTransaction(transaction: ITransaction): void {
       if (!this.selectedTimeframe) return
       transaction.id = this.selectedTimeframe.transaction.length
       transaction.amount = Number(transaction.amount)
       this.selectedTimeframe.transaction.push(transaction)
+      this.selectedTimeframe.backedUp = false
     },
     
     updateTransaction(transaction: ITransaction): void {
@@ -167,6 +164,7 @@ export const useAppStore = defineStore("app", {
           amount: Number(transaction.amount),
           type: transaction.type
         })
+        this.selectedTimeframe.backedUp = false
       }
     },
     
@@ -179,6 +177,7 @@ export const useAppStore = defineStore("app", {
         amount: Number(transaction.amount),
         id: this.selectedTimeframe.savingsTransactions.length + 1,
       })
+      this.selectedTimeframe.backedUp = false
     },
     
     updateSavingsTransactions(transaction: ITransaction): void {
@@ -192,6 +191,7 @@ export const useAppStore = defineStore("app", {
           type: transaction.type
         })
       }
+      this.selectedTimeframe.backedUp = false
     },
     
     removeTransactionFromSavings(transactionId: number): void {
@@ -199,9 +199,29 @@ export const useAppStore = defineStore("app", {
       const indexedItem = this.selectedTimeframe.savingsTransactions.findIndex(x => x.id === transactionId)
       if (indexedItem !== -1) {
         this.selectedTimeframe.savingsTransactions.splice(indexedItem, 1)
+        this.selectedTimeframe.backedUp = false
       }
       // TODO: add error handling for else case
     },
+
+    addNewTimeFrameFromImport(timeframes: ITimeframe): void{
+      if (!Array.isArray(timeframes)) return;
+      let lastId = this.timeframes.length > 0 ? this.timeframes[this.timeframes.length - 1].id : 0;
+      for (const tf of timeframes) {
+        lastId += 1;
+        const newTf = { ...tf, id: lastId };
+        this.timeframes.push(newTf);
+      }
+    },
+
+    importMissingTransactionTypes(transactionTypes: any) {
+      if (!Array.isArray(transactionTypes)) return;
+      for (const type of transactionTypes) {
+        if (typeof type === "string" && !this.transactionTypes.includes(type)) {
+          this.transactionTypes.push(type);
+        }
+      }
+    }
   },
   persist: true,
 });

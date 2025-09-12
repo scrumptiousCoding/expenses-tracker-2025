@@ -14,7 +14,8 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 //fonts!
 import '@fontsource/rouge-script';
 import '@fontsource/atkinson-hyperlegible';
-
+import { useSettingsStore } from '@/stores/settingsStore';
+import router from '@/router';
 
 const pinia = createPinia()
 const app = createApp(App)
@@ -24,5 +25,10 @@ app.use(pinia)
 app.use(VueApexCharts)
 app.use(Notifications);
 registerPlugins(app)
+
+// Provide settingsStore, router, and notify globally
+app.config.globalProperties.$settingsStore = useSettingsStore();
+app.config.globalProperties.$router = router;
+app.config.globalProperties.$notify = app.config.globalProperties.$notify || ((...args: any[]) => {/* fallback no-op */});
 
 app.mount('#app')

@@ -16,9 +16,14 @@
         @click="goToRoute('/')"
       />
       <v-list-item
-        prepend-icon="mdi-export-variant"
+        prepend-icon="mdi-database-export-outline"
         title="Backup"
         @click="goToRoute('/exportData')"
+      />
+      <v-list-item
+        prepend-icon="mdi-database-import-outline"
+        title="Import"
+        @click="goToRoute('/importData')"
       />
       <v-list-item
         prepend-icon="mdi-bulletin-board"

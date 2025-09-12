@@ -80,7 +80,6 @@
 <script lang="ts">
 import { useAppStore } from "@/stores/app";
 import type { ITransaction } from "@/stores/interfaces/ITimeframe";
-import { useSettingsStore } from "@/stores/settingsStore";
 import { Component, Vue, toNative } from "vue-facing-decorator";
 import TransactionModal from "@/components/Modals/Transaction.vue";
 import DeleteTransactionModal from "./DeleteTransaction.vue";
@@ -102,12 +101,21 @@ class SavingsAccountModal extends Vue {
     type: "Other Expenses",
     date: new Date(),
   };
+
+  formatAmount(item: unknown) {
+    if (!item || typeof item !== 'object' || !('amount' in item)) return '';
+    const tx = item as ITransaction;
+    return this.$settingsStore.currencyFormatting(tx.amount);
+  }
+
   headers = [
     {
       title: "Date",
       key: "date",
-      value: (item: ITransaction) => {
-        return new Date(item.date).toLocaleDateString();
+      value: (item: unknown) => {
+        if (!item || typeof item !== 'object' || !('date' in item)) return '';
+        const tx = item as ITransaction;
+        return new Date(tx.date).toLocaleDateString();
       },
     },
     { title: "Description", value: "description" },
@@ -115,18 +123,13 @@ class SavingsAccountModal extends Vue {
     {
       title: "Amount",
       key: "amount",
-      value: (item: ITransaction) => {
-        return this.settingsStore.currencyFormatting(item.amount);
-      },
+      value: (item: unknown) => this.formatAmount(item),
     },
     { title: "", key: "actions" },
   ];
 
   get appStore() {
     return useAppStore();
-  }
-  get settingsStore() {
-    return useSettingsStore();
   }
   get selectedTimeframe() {
     return this.appStore.selectedTimeframe;
@@ -154,29 +157,17 @@ class SavingsAccountModal extends Vue {
     };
     this.showTransactionModal = true;
   }
-  closeModal() {
-    this.$emit("closeModal");
+  editItem(item: ITransaction) {
+    this.transaction = { ...item };
+    this.showTransactionModal = true;
   }
-
   confirmDeleteTransaction(item: ITransaction) {
     this.transaction = item;
     this.deleteTransactionModal = true;
   }
   deleteTransaction() {
-    this.appStore.removeTransactionFromSavings(this.transaction.id!);
+    this.appStore.deleteSavingsTransaction(this.transaction.id!);
     this.deleteTransactionModal = false;
-  }
-  editItem(item: ITransaction) {
-    //dont just assign the item to transaction, create a new object with the same values
-    // to avoid mutating the original object
-    this.transaction = {
-      id: item.id,
-      description: item.description,
-      amount: item.amount,
-      type: item.type,
-      date: new Date(item.date),
-    };
-    this.showTransactionModal = true;
   }
   getChipColor(type: string) {
     switch (type) {

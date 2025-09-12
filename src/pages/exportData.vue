@@ -48,6 +48,7 @@
 </template>
 <script lang="ts">
 import { useAppStore } from "@/stores/app";
+import releaseNotes from "@/releaseNotes.json";
 import type { ITimeframe } from "@/stores/interfaces/ITimeframe";
 import { Component, Vue, toNative } from "vue-facing-decorator";
 
@@ -98,7 +99,11 @@ class exportData extends Vue {
         }
         let fileName = 'ExpensesExport'
         if (this.customFileName !== '' && this.customFileName && this.customFileName !== undefined) fileName = this.customFileName
-        const json = this.timeframes.filter((tf: ITimeframe) => this.selected.includes(tf.id));
+        const json = {
+            version: releaseNotes[0].version,
+            timeframes: this.timeframes.filter((tf: ITimeframe) => this.selected.includes(tf.id)),
+            transactionTypes: this.appStore.transactionTypes
+        };
 
         //json to string and string written to file
         const blob = new Blob([JSON.stringify(json)], { type: 'application/json' });

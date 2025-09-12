@@ -1,86 +1,61 @@
 <template>
   <v-row>
-    <v-col lg="2" md="3" sm="4">
-      <v-card class="mt-0 mb-3 sticky-note mx-0">
-        <v-card-title class="sticky-note-title mb-2">
-          History Breakdown
-        </v-card-title>
-        <v-card-text>
-          <v-text-field
-            v-model="filterType"
-            density="compact"
-            variant="outlined"
-            label="Filter Description"
-            hide-details="auto"
-            class="flex-1-1-100 mb-2"
-            clearable
-          />
-          <v-btn
-            class="mb-2"
-            block
-            @click="addNewTransaction()"
-          >
-            Add new
-          </v-btn>
-          <v-btn
-            class="mb-2"
-            block
-            @click="addDummyData"
-          > 
-            Add Dummy Data
-          </v-btn>
-          <v-btn
-            class="mb-2"
-            block
-            :color="filterType === '' ? 'primary' : ''"
-            @click="filterOnType('All')"
-          > 
-            Show all 
-          </v-btn>
-          <v-btn
-            class="mb-2"
-            block
-            :color="filterType === 'Fixed Expenses' ? 'primary' : ''"
-            @click="filterOnType('Fixed Expenses')"
-          >
-            Fixed Expenses
-          </v-btn>
-          <v-btn
-            class="mb-2"
-            block
-            :color="filterType === 'Other Expenses' ? 'primary' : ''"
-            @click="filterOnType('Other Expenses')"
-          >
-            Other Expenses
-          </v-btn>
-          <v-btn
-            class="mb-2"
-            block
-            :color="filterType === 'Income' ? 'primary' : ''"
-            @click="filterOnType('Income')"
-          >
-            Income
-          </v-btn>
-          <v-btn
-            class="mb-2"
-            block
-            :color="filterType === 'Savings' ? 'primary' : ''"
-            @click="filterOnType('Savings')"
-          >
-            Savings
-          </v-btn>
-        </v-card-text>
+    <v-col>
+      <v-card class="my-0 mx-0">
+        <div class="bookmark-right" />
+        <div class="card-border">
+          <v-card-title class="mb-2">
+            History Breakdown
+          </v-card-title>
+          <v-card-text>
+            <v-row class="mb-1">
+              <v-col class="py-0">
+                <v-text-field
+                  v-model="filterDescription"
+                  density="compact"
+                  variant="outlined"
+                  label="Description"
+                  hide-details="auto"
+                  clearable
+                />
+              </v-col>
+              <v-col class="py-0">
+                <v-select
+                  v-model="filterTransactionType"
+                  :items="appStore.transactionTypes"
+                  label="Type"
+                  density="compact"
+                  hide-details="auto"
+                  variant="outlined"
+                  clearable
+                ></v-select>
+              </v-col>
+              <v-col cols="auto" class="text-right py-0 align-self-center">
+                <v-btn
+                density="compact"
+                size="large"
+                variant="outlined"
+                color="primary"
+                icon="mdi-plus"
+                  @click="addNewTransaction()"
+                >
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </div>
       </v-card>
     </v-col>
-    <v-col lg="10" md="9" sm="8">
+  </v-row>
+  <v-row>
+    <v-col>
       <v-card>
         <v-data-table
           :loading="loadTableData"
           density="compact"
           :headers="headers"
-          :search="filterType"
           item-value="type"
-          :items="selectedTimeframe?.transaction"
+          :items="filteredItems"
           items-per-page="20"
         >
           <template #[`item.type`]="{ item }">
@@ -139,7 +114,6 @@
 <script lang="ts">
 import { useAppStore } from "@/stores/app";
 import { useGraphStore } from "@/stores/graphStore";
-import { useSettingsStore } from "@/stores/settingsStore";
 import type { ITransaction } from "@/stores/interfaces/ITimeframe";
 import { Component, Vue, toNative } from "vue-facing-decorator";
 import TransactionModal from "@/components/Modals/Transaction.vue";
@@ -153,6 +127,8 @@ import DeleteTransactionModal from "@/components/Modals/DeleteTransaction.vue";
 class TableDisplay extends Vue {
   loadTableData: boolean = false;
   transactionModal: boolean = false;
+  filterTransactionType: string = '';
+  filterDescription: string = "";
   transaction: ITransaction = {
     id: null,
     description: "",
@@ -160,15 +136,22 @@ class TableDisplay extends Vue {
     type: "Other Expenses",
     amount: 0,
   };
-  filterValue: string = "";
   deleteTransactionModal: boolean = false;
+
+  formatAmount(item: unknown) {
+    if (!item || typeof item !== 'object' || !('amount' in item)) return '';
+    const tx = item as ITransaction;
+    return this.$settingsStore.currencyFormatting(tx.amount);
+  }
 
   headers = [
     {
       title: "Date",
       key: "date",
-      value: (item: ITransaction) => {
-        return new Date(item.date).toLocaleDateString();
+      value: (item: unknown) => {
+        if (!item || typeof item !== 'object' || !('date' in item)) return '';
+        const tx = item as ITransaction;
+        return new Date(tx.date).toLocaleDateString();
       },
     },
     { title: "Description", value: "description" },
@@ -176,13 +159,10 @@ class TableDisplay extends Vue {
     {
       title: "Amount",
       key: "amount",
-      value: (item: ITransaction) => {
-        return this.settingsStore.currencyFormatting(item.amount);
-      },
+      value: (item: unknown) => this.formatAmount(item),
     },
     { title: "", key: "actions"},
   ];
-  filterType = "";
   minDate: string = '';
   maxDate: string = '';
 
@@ -192,11 +172,18 @@ class TableDisplay extends Vue {
   get graphStore() {
     return useGraphStore();
   }
-  get settingsStore() {
-    return useSettingsStore()
-  }
   get selectedTimeframe() {
     return this.appStore.selectedTimeframe;
+  }
+  get filteredItems() {
+    if (!this.selectedTimeframe?.transaction) return [];
+    let query = this.filterDescription?.toString().toLowerCase() || '';
+    let typeFilter = this.filterTransactionType;
+    return this.selectedTimeframe.transaction.filter((item: ITransaction) => {
+      let matchesType = !typeFilter || item.type === typeFilter;
+      let matchesDescription = !query || item.description.toLowerCase().includes(query);
+      return matchesType && matchesDescription;
+    });
   }
   mounted() {
     if (this.selectedTimeframe !== null) {
@@ -233,10 +220,6 @@ class TableDisplay extends Vue {
     };
     this.transactionModal = true;
   }
-  addDummyData() {
-    this.appStore.addDummyData();
-    this.updateTable();
-  }
   updateTable() {
     this.loadTableData = true;
     this.graphStore.constructData();
@@ -251,12 +234,10 @@ class TableDisplay extends Vue {
     this.updateTable();
     this.transactionModal = false;
   }
-  filterOnType(type: string) {
-    if (type === "All") {
-      this.filterType = "";
-    } else {
-      this.filterType = type;
-    }
+  filterTableValues (value: any, query: any, item: any ) {
+    return value != null &&
+      query != null &&
+      value.toString().toLocaleUpperCase().indexOf(query) !== -1
   }
   getChipColor(type: string) {
     switch (type) {

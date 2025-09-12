@@ -1,5 +1,13 @@
 [
     {
+        "version" : "0.4.0",
+        "notes" : [
+            "Updated UI elements",
+            "Added import data feature",
+            "Updated the export to include verion and data for savings types"
+        ]
+    },
+    {
         "version" : "0.3.0",
         "notes" : [
             "Test document fixes as per indication (3, 4, 5, 7)",

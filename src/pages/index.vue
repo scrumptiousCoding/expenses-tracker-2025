@@ -2,7 +2,7 @@
   <div class="pa-4">
     <v-row>
       <v-col cols="12">
-        <navigation-comp />
+  <navigation-comp />
       </v-col>
     </v-row>
     <v-row v-if="!selectedTimeframe">
@@ -100,7 +100,7 @@
                     <p class="info-card-title">
                       Saved this timeframe
                     </p>
-                    <h3>{{ settingsStore.currencyFormatting(getSavings) }}</h3>
+                      <h3>{{ $settingsStore.currencyFormatting(getSavings) }}</h3>
                   </v-col>
                 </v-row>
               </v-card-text>
@@ -133,7 +133,6 @@
 </template>
 <script lang="ts">
 import { Component, Vue, toNative } from "vue-facing-decorator";
-import { useSettingsStore } from "@/stores/settingsStore";
 import NavigationComp from "@/components/Navigation.vue";
 import TimeFrameModal from "@/components/Modals/TimeFrame.vue";
 import { useAppStore } from "@/stores/app";
@@ -183,10 +182,6 @@ class IndexPage extends Vue {
 
   get appStore() {
     return useAppStore();
-  }
-
-  get settingsStore() {
-    return useSettingsStore();
   }
 
   get graphStore() {
