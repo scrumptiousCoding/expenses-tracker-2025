@@ -16,6 +16,11 @@
         @click="goToRoute('/')"
       />
       <v-list-item
+        prepend-icon="mdi-chart-areaspline"
+        title="Budgets"
+        @click="goToRoute('/budgetDashboard')"
+      />
+      <v-list-item
         prepend-icon="mdi-database-export-outline"
         title="Backup"
         @click="goToRoute('/exportData')"

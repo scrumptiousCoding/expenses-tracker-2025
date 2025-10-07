@@ -21,6 +21,16 @@
             :return-object="true"
             @update:model-value="selectCountry"
           />
+          <v-select
+            v-model="selectedTheme"
+            label="Theme"
+            variant="outlined"
+            density="compact"
+            :items="$settingsStore.themes"
+            item-title="themeName"
+            :return-object="true"
+            @update:model-value="selectTheme"
+          />
         </v-card-text>
       </v-card>
       
@@ -48,12 +58,15 @@
 <script lang="ts">
 import { Component, Vue, toNative } from "vue-facing-decorator";
 import { useAppStore } from "@/stores/app";
+  import { useTheme } from 'vuetify'
 import type { ICountryLocale } from "@/stores/interfaces/ICountryLocale";
 
 @Component
-class TimeFrameModal extends Vue {
+class SettingsModal extends Vue {
   selectedCountry: ICountryLocale | null = null;
+  selectedTheme: any = null;
   newExpendature: string = '';
+  theme = useTheme();
 
   get appStore() {
     return useAppStore();
@@ -66,6 +79,10 @@ class TimeFrameModal extends Vue {
 
   selectCountry(country: ICountryLocale) {
     this.$settingsStore.setSelectedCountry(country);
+  }
+  selectTheme(theme: any) {
+    this.theme.change(theme)
+    this.$settingsStore.setSelectedTheme(theme);
   }
   fetchLocaleInformation() {
     this.$settingsStore.getLocaleList();
@@ -81,5 +98,5 @@ class TimeFrameModal extends Vue {
     this.$emit("closeModal");
   }
 }
-export default toNative(TimeFrameModal);
+export default toNative(SettingsModal);
 </script>
