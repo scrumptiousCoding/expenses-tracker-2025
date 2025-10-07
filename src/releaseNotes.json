@@ -1,10 +1,18 @@
 [
     {
+        "version" : "0.5.0",
+        "notes" : [
+            "Added Budgeting",
+            "Added feature to change theme"
+        ]
+    },
+    {
         "version" : "0.4.0",
         "notes" : [
             "Updated UI elements",
             "Added import data feature",
-            "Updated the export to include verion and data for savings types"
+            "Updated the export to include verion and data for savings types",
+            "Fixed UI Bug on some calendar displays"
         ]
     },
     {

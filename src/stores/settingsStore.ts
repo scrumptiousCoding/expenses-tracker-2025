@@ -12,7 +12,9 @@ interface ILocaleResponse {
 
 export interface ISettingsStore {
   selectedCountry: ICountryLocale;
+  selectedTheme: string;
   countryLocaleList: ICountryLocale[];
+  themes: any[];
 }
 
 export const useSettingsStore = defineStore("settingsStore", {
@@ -22,7 +24,9 @@ export const useSettingsStore = defineStore("settingsStore", {
       currencyCode: "ZAR",
       countryName: "South Africa",
     },
+    selectedTheme: 'pumpkinTheme',
     countryLocaleList: [],
+    themes: [ 'pumpkinTheme', 'strawberryTheme']
   }),
   getters: {},
   actions: {
@@ -55,9 +59,11 @@ export const useSettingsStore = defineStore("settingsStore", {
         });
     },
     setSelectedCountry(country: ICountryLocale) {
-      console.log(country);
-
       this.selectedCountry = country;
+    },
+    setSelectedTheme(theme: string) {
+      //set the selected theme
+      this.selectedTheme = theme
     },
     currencyFormatting(amount: number) {
       return new Intl.NumberFormat(this.selectedCountry.locale, {
@@ -66,4 +72,5 @@ export const useSettingsStore = defineStore("settingsStore", {
       }).format(amount);
     },
   },
+  persist: true
 });
