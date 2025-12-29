@@ -17,6 +17,8 @@ interface IBudgetingTimelines {
 interface IGeneralAccount {
     description: string,
     budgetAmount: number,
+    alwaysShow: boolean, //hide some of the tables that you dont always use
+    notes: string, // add notes to help you remember what this category is for
     transactions: ITransactions[]
 }
 

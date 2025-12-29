@@ -1,59 +1,5 @@
 <template>
     <div>
-          <v-row>
-              <v-col cols="4" class="d-flex flex-column">
-                  <v-card>
-                    <v-card-title class="sticky-note-header">
-                      Overview
-                    </v-card-title>
-                    <v-card-text class="sticky-note-body pt-3">
-                      <budget-label :description="'Savings Balance'" :amount="13791.44" :tonal="true" />
-                      <budget-label :description="'Account Balance'" :amount="13791.44" :tonal="true" />
-                      <budget-label :description="'Income'" :amount="13791.44" :tonal="true" />
-                      <!-- <budget-label 
-                          v-for="(item, index) in budgetingTimelines.savingAccounts" :key="index" 
-                          :description="item.description" :amount="item.budgetAmount" /> -->
-                      <budget-label :description="'Bills'" :amount="13791.44" :tonal="true" />
-                      <budget-label :description="'Insurance'" :amount="13791.44" />
-                      <budget-label :description="'Car'" :amount="13791.44" />
-                      <budget-label :description="'Others'" :amount="13791.44" />
-                      <budget-label :description="'Other Spending'" :amount="13791.44" :tonal="true" />
-                      <budget-label :description="'Food'" :amount="13791.44" />
-                      <budget-label :description="'Petrol'" :amount="13791.44" />
-                      <budget-label :description="'Spending'" :amount="13791.44" />
-                      <budget-label :description="'Ending Account Balance'" :amount="13791.44" :tonal="true" />
-                      <budget-label :description="'Ending Savings Balance'" :amount="13791.44" :tonal="true" />
-                    </v-card-text>
-                  </v-card>
-
-              <v-card class="mt-5 flex-grow-1" image="https://i.pinimg.com/1200x/89/26/7f/89267f0a43554f842ef8d1a6e9295bc7.jpg">
-                <div class="d-flex align-start pa-4 h-100" >
-                  <v-card class="flex-grow-1">
-                    <div class="bookmark-right" />
-                    <div class="card-border">
-                      <v-card-text>
-                        <h3>Under budget!</h3>
-                      </v-card-text>
-                    </div>
-                  </v-card>
-                </div>
-              </v-card>
-              </v-col>
-              <v-col cols="8">
-                <v-row>
-                  <v-col cols="6">
-                    <info-card
-                      title="Starting Amount"
-                      :amount="1000.00"
-                    />
-                  </v-col>
-                  <v-col cols="6">
-                    <info-card
-                      title="Closing Amount"
-                      :amount="1000.00"
-                    />
-                  </v-col>
-                </v-row>
                 <v-row>
                   <v-col cols="12" class="pt-0">
                     <v-card>
@@ -72,18 +18,16 @@
                     </v-card>
                   </v-col>
                 </v-row>
-
                 <v-row>
                   <v-col cols="12">
                     <v-card>
                       <v-card-title class="sticky-note-header d-flex ">
                         <span class=" me-auto">Food</span>
-                        <v-btn @click="expandDisplay = !expandDisplay" variant="icon">
-                          <v-icon v-if="expandDisplay">mdi-window-minimize</v-icon>
-                          <v-icon v-if="!expandDisplay">mdi-window-maximize</v-icon>
+                        <v-btn variant="text">
+                          <v-icon>mdi-window-minimize</v-icon>
                         </v-btn>
                       </v-card-title>
-                      <v-card-text class="sticky-note-body" v-if="expandDisplay">
+                      <v-card-text class="sticky-note-body">
                         <v-data-table
                           density="compact"
                           :headers="headers"
@@ -130,8 +74,6 @@
                     </v-card>
                   </v-col>
                 </v-row>
-              </v-col>
-          </v-row>
     </div>
 </template>
 <script lang="ts">
@@ -147,7 +89,7 @@ import InfoCard from "./SmallBits/InfoCard.vue";
   }
 })
 class BudgetSelectionView extends Vue {
-  expandDisplay: boolean = false
+  
   headers = [
     { title: "name", value: "name" },
     { title: "calories", value: "calories" },

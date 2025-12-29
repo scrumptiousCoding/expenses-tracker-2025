@@ -1,5 +1,5 @@
 <template>
-    <div class="">
+    <div class="dot-grid-background">
         <v-card image="https://i.pinimg.com/1200x/89/26/7f/89267f0a43554f842ef8d1a6e9295bc7.jpg" 
             height="250" 
             style="border-radius: 0px; opacity: 0.7;" 
@@ -46,26 +46,64 @@
                 </v-card>
             </v-container>
         </v-card>
-        <v-row>
-            <v-col>
-                <budget-selection />
-            </v-col>
-        </v-row>
+        <v-container>
+            <v-row>
+                <v-col cols="3">
+                    <v-btn block @click="tab = 'overview'" :disabled="tab === 'overview'" color="primary">Overview</v-btn>
+                </v-col>
+                <v-col cols="3">
+                    <v-btn block @click="tab = 'budgeting'" :disabled="tab === 'budgeting'" color="primary">Budgeting</v-btn>
+                </v-col>
+                <v-col cols="3">
+                    <v-btn block @click="tab = 'savings'" :disabled="tab === 'savings'" color="primary">Savings</v-btn>
+                </v-col>
+                <v-col cols="3">
+                    <v-btn block @click="tab = 'goals'" color="primary">Goals</v-btn>
+                </v-col>
+            </v-row>
+            <v-row v-if="tab === 'overview'">
+                <v-col>
+                    <budget-overview />
+                </v-col>
+            </v-row>
+            <v-row v-if="tab === 'budgeting'">
+                <v-col>
+                    <budget-selection />
+                </v-col>
+            </v-row>
+            <v-row v-if="tab === 'savings'">
+                <v-col>
+                    <budget-savings />
+                </v-col>
+            </v-row>
+            <v-row v-if="tab === 'goals'">
+                <v-col>
+                    <budget-goals-and-settings />
+                </v-col>
+            </v-row>
+        </v-container>
 
         <new-budget-timeframe :show-modal="showModal" @close-modal="showModal = false" />
     </div>
 </template>
 <script lang="ts">
 import BudgetSelection from "@/components/BudgetSelectionView.vue";
+import BudgetOverview from "@/components/BudgetOverviewView.vue";
+import BudgetGoalsAndSettings from "@/components/BudgetGoalsAndSettingsView.vue";
+import BudgetSavings from "@/components/BudgetSavingsView.vue";
 import { Component, Vue, toNative } from "vue-facing-decorator";
 
 @Component({
   components: {
-    BudgetSelection
+    BudgetSelection,
+    BudgetOverview,
+    BudgetGoalsAndSettings,
+    BudgetSavings
   }
 })
 class budgetDashboard extends Vue {
     showModal: boolean = false
+    tab: string = 'overview'
 }
 export default toNative(budgetDashboard);
 </script>

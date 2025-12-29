@@ -20,7 +20,7 @@
 <script lang="ts">
 import { useAppStore } from "@/stores/app";
 import { Component, Vue, toNative } from "vue-facing-decorator";
-import InfoCard from "./InfoCard.vue";
+import InfoCard from "./SmallBits/InfoCard.vue";
 @Component({
   components: {
     InfoCard,

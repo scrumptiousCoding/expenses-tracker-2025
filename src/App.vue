@@ -18,7 +18,6 @@ class App extends Vue {
   theme = useTheme();
 
   mounted() {
-    console.log(this.$settingsStore.selectedTheme)
     this.theme.change(this.$settingsStore.selectedTheme)
   }
 
