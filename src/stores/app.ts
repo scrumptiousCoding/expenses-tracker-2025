@@ -2,12 +2,16 @@
 import { defineStore } from "pinia";
 import type { ITimeframe } from "./interfaces/ITimeframe";
 import type { ITransaction } from "./interfaces/ITimeframe";
+import type { IBudget } from "./interfaces/IBudgetDefinitions";
 
 export interface ISystemStore {
   timeframes: ITimeframe[];
   selectedTimeframe: ITimeframe | null;
   transactionTypes: string[];
   firstLoad: boolean;
+
+  budgetTimeframes: IBudget[];
+  selectedBudgetTimeframe: IBudget | null
 }
 
 export const useAppStore = defineStore("app", {
@@ -16,6 +20,10 @@ export const useAppStore = defineStore("app", {
     selectedTimeframe: null,
     transactionTypes: ["Income", "Fixed Expenses", "Other Expenses", "Savings"],
     firstLoad: true,
+
+
+    budgetTimeframes: [],
+    selectedBudgetTimeframe: null
   }),
   getters: {
     // Helper function to calculate transactions by type (not exposed as a getter)
@@ -221,6 +229,23 @@ export const useAppStore = defineStore("app", {
           this.transactionTypes.push(type);
         }
       }
+    },
+
+
+
+
+    //budget timeframe
+    addNewBudgetTimeframe(timeframe: IBudget) {
+      let newId = 0;
+      if (this.budgetTimeframes !== null) {
+        newId = this.budgetTimeframes.length > 0 ? this.budgetTimeframes[this.budgetTimeframes.length-1].id + 1 : 1;
+      }
+      timeframe.id = newId
+      this.budgetTimeframes.push(timeframe)
+      this.selectedBudgetTimeframe = timeframe
+    },
+    clearBudgetTimeframe() {
+      this.selectedBudgetTimeframe = null
     }
   },
   persist: true,

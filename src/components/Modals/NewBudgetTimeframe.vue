@@ -5,41 +5,138 @@
     fullscreen
   >
     <v-card>
-        <v-card-title>
-            <v-btn @click="closeModal">Close</v-btn>
+        <v-card-title class="space-between">
+            <v-row>
+                <v-col>
+                    <v-btn>Import From Previous</v-btn>
+                    <v-btn @click="saveTimeframe" color="primary">Save</v-btn>
+                </v-col>
+                <v-col class="text-right"><v-btn @click="attemptClosing">Close</v-btn></v-col>
+            </v-row>
+            
         </v-card-title>
         <v-card-text class="dot-grid-background">
             <v-row>
+                <v-col class="pb-0">
+                    <h4>Basic Information Setup</h4>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="6">
+                    <v-text-field
+                        label="Description"
+                        density="compact"
+                        v-model="newTimeFrame.description"
+                        variant="outlined"
+                        hide-details="auto"
+                        :rules="[rules.required]"
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="6">
+                    <v-text-field
+                        label="Primary Account Starting Balance"
+                        density="compact"
+                        variant="outlined"
+                        hide-details="auto"
+                        type="number"
+                        v-model="newTimeFrame.startingBalance"
+                        :rules="[rules.numbersOnly, rules.required]"
+                    ></v-text-field>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="6">
+                    <date-selector :label="'Timeframe Start Date'" v-model:data="newTimeFrame.startDate" />
+                </v-col>
+                <v-col cols="6">
+                    <date-selector :label="'Timeframe End Date'" v-model:data="newTimeFrame.endDate" />
+                </v-col>
+            </v-row>
+            <v-row>
                 <v-col cols="11">
-                    <v-row class="px-0">
-                        <v-col cols="4">
-                            <v-text-field
-                                label="Budget"
-                                density="compact"
-                                v-model="budget"
-                                variant="outlined"
-                                hide-details="auto"
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="4">
-                            <v-text-field
-                                label="Budget"
-                                density="compact"
-                                v-model="budget"
-                                variant="outlined"
-                                hide-details="auto"
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="4">
-                            <v-text-field
-                                label="Budget"
-                                density="compact"
-                                v-model="budget"
-                                variant="outlined"
-                                hide-details="auto"
-                            ></v-text-field>
+
+                    <v-row v-if="appStore.timeframes.length > 0">
+                        <v-col cols="12">
+                            <v-banner
+                                icon="mdi-exclamation-thick"
+                                color="primary"
+                                :stacked="false"
+                            >
+                            <v-banner-text>
+                                You can import some things from the previous buget to make some things easier.
+                            </v-banner-text>
+
+                            <template v-slot:actions>
+                                <v-btn>Import From Previous (Coming soon)</v-btn>
+                            </template>
+                            </v-banner>
                         </v-col>
                     </v-row>
+
+                    
+                    <v-row>
+                        <v-col>
+                            <v-banner
+                                color="primary"
+                                :stacked="false"
+                            >
+                                <v-banner-text>
+                                    <h4>Bills</h4>
+                                    These are once off expenses for the time period. Or things that are unavoidable such as cell phone contracts and rent
+                                </v-banner-text>
+
+                                <template v-slot:actions>
+                                    <v-btn @click="dummyInfoForBills">Fill with sample</v-btn>
+                                </template>
+                            </v-banner>
+                        </v-col>
+                    </v-row>
+
+                    <budget-sections-setup :list="newTimeFrame.bills"/>
+
+                    
+                    <v-row>
+                        <v-col class="pb-0">
+                            <v-banner
+                                color="primary"
+                                :stacked="false"
+                            >
+                                <v-banner-text>
+                                    <h4>Expenses</h4>
+                            These are categories for recurring expenses such as groceries or transport costs. 
+                                </v-banner-text>
+
+                                <template v-slot:actions>
+                                    <v-btn @click="dummyInfoForExpenses">Fill with sample</v-btn>
+                                </template>
+                            </v-banner>
+                        </v-col>
+                    </v-row>
+                    <budget-sections-setup :list="newTimeFrame.expenses"/>
+
+
+                    
+                    <v-row>
+                        <v-col class="pb-0">
+                            <v-banner
+                                color="primary"
+                                :stacked="false"
+                            >
+                                <v-banner-text>
+                                    <h4>Savings</h4>
+                            If you have more than one savings account then this is the place to keep track of them. Otherwise just adding one is fine. Do note that this app assumes that all allocations to savings go into a different account and as such would be deducted from your account balance. 
+                                </v-banner-text>
+
+                                <template v-slot:actions>
+                                    <v-btn @click="dummyInfoForSavings">Fill with sample</v-btn>
+                                </template>
+                            </v-banner>
+                        </v-col>
+                    </v-row>
+                    <budget-sections-setup :list="newTimeFrame.savings"/>
+
+
+                    
                 </v-col>
                 <v-col cols="1">
                     <v-card image="https://i.pinimg.com/736x/6c/83/bb/6c83bb5b04aa8fc03381745c64b29407.jpg"
@@ -48,24 +145,127 @@
                     </v-card>
                 </v-col>
             </v-row>
+            
+                <v-row>
+                    <v-col class="pb-0">
+                        <h4>Goals (Coming Soon)</h4>                   
+                    </v-col>
+                </v-row>
         </v-card-text>
     </v-card>
   </v-dialog>
 
+
+  <v-dialog
+    v-model="showConfirmationModal"
+    width="500"
+  >
+    <v-card>
+        <v-card-text>
+            Unsaved changes will not be lost! Are you sure you want to leave?
+        </v-card-text>
+        <v-card-actions>
+            <v-btn @click="closeModal()">Yes</v-btn>
+            <v-btn @click="showConfirmationModal = false">No</v-btn>
+        </v-card-actions>
+    </v-card>
+    </v-dialog>
 </template>
 
 <script lang="ts">
 import { Component, Vue, toNative, Prop } from "vue-facing-decorator";
+import { useAppStore } from "@/stores/app";
+import DateSelector from "../SmallBits/DateSelector.vue";
+import type { IBudget } from "@/stores/interfaces/IBudgetDefinitions";
 
-@Component
+@Component({
+  components: {
+    DateSelector
+  }
+})
 class TimeFrameModal extends Vue {
   @Prop({ required: true, default: false }) showModal!: boolean;
+  @Prop({ default: true, required: true, type: Boolean }) isNewTimeFrame!: boolean;
+  
+  rules = {
+    required: (value: string) => !!value || "This field is required",
+    numbersOnly: (value: any) => /^[0-9]+([\.][0-9]+)?$/.test(value) || "Only numerical values and a . are allowed"
+  };
 
-  budget = ''
+  description: string = ''
+  currencySelected: string = ''
+  showConfirmationModal: boolean = false
+  newTimeFrame : IBudget = {
+        description: '',
+        startingBalance: 0,
+        startDate: new Date(),
+        endDate: new Date(),
+        id: 0,
+        backedUp: false,
 
-  closeModal() {
-    this.$emit("closeModal");
-  }
+        bills: [],
+        expenses: [],
+        savings: []
+    }   
+  emptyTimeFrame : IBudget = {
+        description: '',
+        startingBalance: 0,
+        startDate: new Date(),
+        endDate: new Date(),
+        id: 0,
+        backedUp: false,
+
+        bills: [],
+        expenses: [],
+        savings: []
+    }   
+
+    get appStore() {
+        return useAppStore();
+    }
+
+    get selectedTimeframe() {
+        return this.appStore.selectedTimeframe;
+    }
+
+    mounted() {
+        this.currencySelected = this.$settingsStore.selectedCountry.currencySymbol
+    }
+
+    saveTimeframe(){
+        this.appStore.addNewBudgetTimeframe(this.newTimeFrame)
+        this.closeModal()
+    }
+
+    dummyInfoForBills(){
+        this.newTimeFrame.bills.push({description: 'Rent', amount: 8000.62, transactions: []})
+        this.newTimeFrame.bills.push({description: 'Phone', amount: 605.68, transactions: []})
+        this.newTimeFrame.bills.push({description: 'Insurance', amount: 950.15, transactions: []})
+    }
+
+    dummyInfoForExpenses(){
+        this.newTimeFrame.expenses.push({description: 'Groceries', amount: 2500.35, transactions: []})
+        this.newTimeFrame.expenses.push({description: 'Gas', amount: 500.98, transactions: []})
+        this.newTimeFrame.expenses.push({description: 'Personal', amount: 1000.35, transactions: []})
+    }
+    
+    dummyInfoForSavings(){
+        this.newTimeFrame.savings.push({ description: 'Personal Savings', amount: 500, startingAmount: 10500.25, transactions: []})
+        this.newTimeFrame.savings.push({ description: 'Investment', amount: 1500, startingAmount: 3000.56, transactions: []})
+    }
+
+    attemptClosing() {
+        //check if things are filled in
+        if (JSON.stringify(this.newTimeFrame) !== JSON.stringify(this.emptyTimeFrame)) {
+            this.showConfirmationModal = true
+        }
+        else this.closeModal()
+    }
+
+    closeModal() {
+        this.showConfirmationModal = false
+        this.$emit("closeModal");
+    }
 }
 export default toNative(TimeFrameModal);
 </script>

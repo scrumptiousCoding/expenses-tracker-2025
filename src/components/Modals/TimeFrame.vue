@@ -89,8 +89,7 @@ import { Component, Prop, Vue, toNative } from "vue-facing-decorator";
 import { useAppStore } from "@/stores/app";
 @Component
 class TimeFrameModal extends Vue {
-  @Prop({ default: true, required: true, type: Boolean })
-  newTimeFrame!: boolean;
+  @Prop({ default: true, required: true, type: Boolean }) newTimeFrame!: boolean;
 
   endDate: Date = new Date();
   startDate: Date = new Date();

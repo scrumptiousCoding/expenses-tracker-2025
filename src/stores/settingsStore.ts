@@ -6,6 +6,7 @@ interface ILocaleResponse {
   country: {
     name: string;
     currency_code: string;
+    currency_symbol: string;
   };
   locale: string;
 }
@@ -23,6 +24,7 @@ export const useSettingsStore = defineStore("settingsStore", {
       locale: "af-ZA",
       currencyCode: "ZAR",
       countryName: "South Africa",
+      currencySymbol: "R"
     },
     selectedTheme: 'pumpkinTheme',
     countryLocaleList: [],
@@ -45,6 +47,7 @@ export const useSettingsStore = defineStore("settingsStore", {
                   countryName: item.country.name,
                   locale: item.locale,
                   currencyCode: item.country.currency_code,
+                  currencySymbol: item.country.currency_symbol
                 });
               }
             }
