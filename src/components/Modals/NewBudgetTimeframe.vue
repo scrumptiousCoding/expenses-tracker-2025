@@ -8,7 +8,7 @@
         <v-card-title class="space-between">
             <v-row>
                 <v-col>
-                    <v-btn>Import From Previous</v-btn>
+                    <v-btn>Import From Previous (coming soon)</v-btn>
                     <v-btn @click="saveTimeframe" color="primary">Save</v-btn>
                 </v-col>
                 <v-col class="text-right"><v-btn @click="attemptClosing">Close</v-btn></v-col>
@@ -49,7 +49,7 @@
                     <date-selector :label="'Timeframe Start Date'" v-model:data="newTimeFrame.startDate" />
                 </v-col>
                 <v-col cols="6">
-                    <date-selector :label="'Timeframe End Date'" v-model:data="newTimeFrame.endDate" />
+                    <date-selector :label="'Timeframe End Date'" v-model:data="newTimeFrame.endDate" :min-date="newTimeFrame.startDate" />
                 </v-col>
             </v-row>
             <v-row>

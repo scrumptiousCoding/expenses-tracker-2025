@@ -21,6 +21,7 @@
           <v-date-picker
             v-model="dateSelected" width="100%"
             color="primary" show-adjacent-months
+            :min="minDate"
           />
         </v-card>
       </v-menu>
@@ -36,6 +37,7 @@ import { Component, Vue, toNative, Prop, Watch } from "vue-facing-decorator";
 class DateTimeSelector extends Vue {
   @Prop({ required: false, default: 'Select Date'}) label: string = '';
   @Prop({ required: true, type: Date }) data!: Date;
+  @Prop({ required: false}) minDate: Date | null = null;
 
   showDateModal: boolean = false
   dateSelected: Date = new Date()
