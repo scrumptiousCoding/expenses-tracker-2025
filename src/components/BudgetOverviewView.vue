@@ -20,7 +20,7 @@
                 :title="selectedTimeframe?.description"
                 :secondaryText="getTimeframeDates"
                 icon="mdi-pencil"
-                @actionItem="" />
+                @actionItem="showModal = true" />
               
               <apexchart
                 type="pie"
@@ -73,7 +73,9 @@
               </v-card>
             </v-col>
           </v-row>
+      <new-budget-timeframe :key="showModal ? 'open' : 'closed'" :show-modal="showModal" @close-modal="showModal = false" :isNewTimeFrame="false" />
     </div>
+    
 </template>
 <script lang="ts">
 import { useAppStore } from "@/stores/app";
@@ -87,6 +89,7 @@ import InfoCardWithButton from "./SmallBits/InfoCardWithButton.vue";
   }
 })
 class BudgetOverviewView extends Vue {
+  showModal: boolean = false
   seriesData = [25,75]
   options = {
     chart: {
@@ -189,6 +192,7 @@ class BudgetOverviewView extends Vue {
     }
     return spendingList
   }
+
 }
 export default toNative(BudgetOverviewView);
 </script>

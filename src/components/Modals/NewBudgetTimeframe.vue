@@ -8,8 +8,8 @@
         <v-card-title class="space-between">
             <v-row>
                 <v-col>
-                    <v-btn>Import From Previous (coming soon)</v-btn>
-                    <v-btn @click="saveTimeframe" color="primary">Save</v-btn>
+                    <v-btn>Import From Previous</v-btn>
+                    <v-btn @click="" color="primary">Save</v-btn>
                 </v-col>
                 <v-col class="text-right"><v-btn @click="attemptClosing">Close</v-btn></v-col>
             </v-row>
@@ -49,7 +49,7 @@
                     <date-selector :label="'Timeframe Start Date'" v-model:data="newTimeFrame.startDate" />
                 </v-col>
                 <v-col cols="6">
-                    <date-selector :label="'Timeframe End Date'" v-model:data="newTimeFrame.endDate" :min-date="newTimeFrame.startDate" />
+                    <date-selector :label="'Timeframe End Date'" v-model:data="newTimeFrame.endDate" />
                 </v-col>
             </v-row>
             <v-row>
@@ -67,7 +67,7 @@
                             </v-banner-text>
 
                             <template v-slot:actions>
-                                <v-btn>Import From Previous (Coming soon)</v-btn>
+                                <v-btn>Import From Previous (not working)</v-btn>
                             </template>
                             </v-banner>
                         </v-col>
@@ -107,7 +107,7 @@
                                 </v-banner-text>
 
                                 <template v-slot:actions>
-                                    <v-btn @click="dummyInfoForExpenses">Fill with sample</v-btn>
+                                    <v-btn>Fill with sample</v-btn>
                                 </template>
                             </v-banner>
                         </v-col>
@@ -128,7 +128,7 @@
                                 </v-banner-text>
 
                                 <template v-slot:actions>
-                                    <v-btn @click="dummyInfoForSavings">Fill with sample</v-btn>
+                                    <v-btn>Fill with sample</v-btn>
                                 </template>
                             </v-banner>
                         </v-col>
@@ -146,11 +146,11 @@
                 </v-col>
             </v-row>
             
-                <v-row>
-                    <v-col class="pb-0">
-                        <h4>Goals (Coming Soon)</h4>                   
-                    </v-col>
-                </v-row>
+                    <v-row>
+                        <v-col class="pb-0">
+                            <h4>Goals</h4>                   
+                        </v-col>
+                    </v-row>
         </v-card-text>
     </v-card>
   </v-dialog>
@@ -220,52 +220,43 @@ class TimeFrameModal extends Vue {
         savings: []
     }   
 
-    get appStore() {
-        return useAppStore();
-    }
+  get appStore() {
+    return useAppStore();
+  }
 
-    get selectedTimeframe() {
-        return this.appStore.selectedTimeframe;
-    }
+  get selectedBudgetTimeframe() {
+    return this.appStore.selectedBudgetTimeframe;
+  }
 
-    mounted() {
-        this.currencySelected = this.$settingsStore.selectedCountry.currencySymbol
-    }
+  mounted() {
+    this.currencySelected = this.$settingsStore.selectedCountry.currencySymbol
+  }
 
-    saveTimeframe(){
-        this.appStore.addNewBudgetTimeframe(this.newTimeFrame)
-        this.closeModal()
+  created() {
+    if (!this.isNewTimeFrame) {
+        this.newTimeFrame = JSON.parse(JSON.stringify(this.selectedBudgetTimeframe))
+        console.log('here', this.newTimeFrame)
+    } else {
+        this.newTimeFrame = JSON.parse(JSON.stringify(this.emptyTimeFrame))
     }
+  }
 
-    dummyInfoForBills(){
-        this.newTimeFrame.bills.push({description: 'Rent', amount: 8000.62, transactions: []})
-        this.newTimeFrame.bills.push({description: 'Phone', amount: 605.68, transactions: []})
-        this.newTimeFrame.bills.push({description: 'Insurance', amount: 950.15, transactions: []})
-    }
+  dummyInfoForBills(){
+    this.newTimeFrame.bills.push()
+  }
 
-    dummyInfoForExpenses(){
-        this.newTimeFrame.expenses.push({description: 'Groceries', amount: 2500.35, transactions: []})
-        this.newTimeFrame.expenses.push({description: 'Gas', amount: 500.98, transactions: []})
-        this.newTimeFrame.expenses.push({description: 'Personal', amount: 1000.35, transactions: []})
+  attemptClosing() {
+    //check if things are filled in
+    if (JSON.stringify(this.newTimeFrame) !== JSON.stringify(this.emptyTimeFrame)) {
+        this.showConfirmationModal = true
     }
-    
-    dummyInfoForSavings(){
-        this.newTimeFrame.savings.push({ description: 'Personal Savings', amount: 500, startingAmount: 10500.25, transactions: []})
-        this.newTimeFrame.savings.push({ description: 'Investment', amount: 1500, startingAmount: 3000.56, transactions: []})
-    }
+    else this.closeModal()
+  }
 
-    attemptClosing() {
-        //check if things are filled in
-        if (JSON.stringify(this.newTimeFrame) !== JSON.stringify(this.emptyTimeFrame)) {
-            this.showConfirmationModal = true
-        }
-        else this.closeModal()
-    }
-
-    closeModal() {
-        this.showConfirmationModal = false
-        this.$emit("closeModal");
-    }
+  closeModal() {
+    this.showConfirmationModal = false
+    this.$emit("closeModal");
+  }
 }
 export default toNative(TimeFrameModal);
 </script>

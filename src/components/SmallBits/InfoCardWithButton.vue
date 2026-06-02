@@ -34,7 +34,9 @@
 </template>
 <script lang="ts">
 import { Component, Prop, Vue, toNative } from "vue-facing-decorator";
-@Component
+@Component({
+  emits: ['actionItem']
+})
 class InfoCardWithButton extends Vue {
   @Prop({ required: true, type: String }) secondaryText!: string;
   @Prop({ required: true, type: String }) title!: string;

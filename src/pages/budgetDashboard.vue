@@ -2,11 +2,11 @@
     <div class="dot-grid-background">
         <v-card image="https://i.pinimg.com/1200x/89/26/7f/89267f0a43554f842ef8d1a6e9295bc7.jpg" 
             height="250" 
-            style="border-radius: 0px; opacity: 0.7;" 
+            style="border-radius: 0px;" 
             variant="flat">
             <v-container height="100%" class="d-flex align-end">
                 <v-card class="flex-grow-1">
-                    <div class="card-border">
+                    <div class="card-border dot-grid-background">
                         <v-card-text class="d-flex flex-wrap">
                             <div class="flex-1-0">
                                 <v-select
@@ -19,6 +19,7 @@
                                     density="compact"
                                     label="Select a timeframe"
                                     return-object
+                                    bg-color="white"
                                     single-line
                                 />
                             </div>
@@ -85,7 +86,7 @@
             </v-row>
         </v-container>
 
-        <new-budget-timeframe :show-modal="showModal" @close-modal="showModal = false" :isNewTimeFrame="false" />
+        <new-budget-timeframe :key="showModal ? 'open' : 'closed'" :show-modal="showModal" @close-modal="showModal = false" :isNewTimeFrame="true" />
     </div>
 </template>
 <script lang="ts">
