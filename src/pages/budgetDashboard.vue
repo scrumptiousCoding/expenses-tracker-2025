@@ -21,6 +21,7 @@
                                     return-object
                                     bg-color="white"
                                     single-line
+                                    clearable
                                 />
                             </div>
                             <div class="align-self-center ml-3">
@@ -37,9 +38,6 @@
                                     <v-list>
                                         <v-list-item @click="showModal = true">
                                             <v-list-item-title>New time frame</v-list-item-title>
-                                        </v-list-item>
-                                        <v-list-item @click="deselectTimeframe()">
-                                            <v-list-item-title>De-select time frame</v-list-item-title>
                                         </v-list-item>
                                     </v-list>
                                 </v-menu>
@@ -85,17 +83,25 @@
                 </v-col>
             </v-row>
         </v-container>
+        
+        <v-container v-else height="73vh">
+            <v-row>
+                <v-col cols="12" class="text-center">
+                    Select a timeframe or make a new one to get started
+                </v-col>
+            </v-row>
+        </v-container>
 
         <new-budget-timeframe :key="showModal ? 'open' : 'closed'" :show-modal="showModal" @close-modal="showModal = false" :isNewTimeFrame="true" />
     </div>
 </template>
 <script lang="ts">
-import { useAppStore } from "@/stores/app";
 import BudgetSelection from "@/components/BudgetSelectionView.vue";
 import BudgetOverview from "@/components/BudgetOverviewView.vue";
 import BudgetGoalsAndSettings from "@/components/BudgetGoalsAndSettingsView.vue";
 import BudgetSavings from "@/components/BudgetSavingsView.vue";
 import { Component, Vue, toNative } from "vue-facing-decorator";
+import { useBudgetStore } from "@/stores/budgetStore";
 
 @Component({
   components: {
@@ -110,15 +116,11 @@ class budgetDashboard extends Vue {
     tab: string = 'overview'
     
     get appStore() {
-        return useAppStore();
+        return useBudgetStore();
     }
 
     get timeFrameOptions() {
         return this.appStore.budgetTimeframes;
-    }
-    
-    deselectTimeframe() {
-        this.appStore.clearBudgetTimeframe();
     }
 }
 export default toNative(budgetDashboard);

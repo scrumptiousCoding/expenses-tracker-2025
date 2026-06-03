@@ -1,45 +1,28 @@
 import { defineStore } from "pinia";
-
-interface IBudgetingTimelines {
-    description: string,
-    id: number,
-    startDate: Date,
-    endDate: Date,
-    bankStartingBalance: number,
-    savingsStartingBalance: number,
-    backedUp: boolean,
-    savingAccounts: IGeneralAccount[],
-    billsAccounts: IGeneralAccount[],
-    incomeAccounts: IGeneralAccount[],
-    spendingAccounts: IGeneralAccount[]
-}
-
-interface IGeneralAccount {
-    description: string,
-    budgetAmount: number,
-    alwaysShow: boolean, //hide some of the tables that you dont always use
-    notes: string, // add notes to help you remember what this category is for
-    transactions: ITransactions[]
-}
-
-interface ITransactions {
-    description: string
-    date: Date
-    type: string
-    id: number | null
-    amount: number
-}
+import type { IBudget } from "./interfaces/IBudgetDefinitions";
 
 export interface IBudgetStore {
-    budgetingTimelines: IBudgetingTimelines[]
+  budgetTimeframes: IBudget[];
+  selectedBudgetTimeframe: IBudget | null
 }
 
 export const useBudgetStore = defineStore("budgetStore", {
   state: (): IBudgetStore => ({
-    budgetingTimelines: []
+    budgetTimeframes: [],
+    selectedBudgetTimeframe: null
   }),
   getters: {},
   actions: {
+    addNewTimeframe(newBudget: IBudget) : void {
+        const newId = this.budgetTimeframes.length > 0 ? this.budgetTimeframes[this.budgetTimeframes.length - 1].id + 1 : 1;
+        newBudget.id = newId
+        this.budgetTimeframes.push(newBudget)
+        this.selectedBudgetTimeframe = newBudget
+    },
+    
+    clearBudgetTimeframe() {
+      this.selectedBudgetTimeframe = null
+    }
   },
   persist: true
 });

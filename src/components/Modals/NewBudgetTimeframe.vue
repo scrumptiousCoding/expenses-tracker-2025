@@ -8,8 +8,7 @@
         <v-card-title class="space-between">
             <v-row>
                 <v-col>
-                    <v-btn>Import From Previous</v-btn>
-                    <v-btn @click="" color="primary">Save</v-btn>
+                    <v-btn @click="saveNewTimeframe()" color="primary">Save</v-btn>
                 </v-col>
                 <v-col class="text-right"><v-btn @click="attemptClosing">Close</v-btn></v-col>
             </v-row>
@@ -55,7 +54,7 @@
             <v-row>
                 <v-col cols="11">
 
-                    <v-row v-if="appStore.timeframes.length > 0">
+                    <v-row v-if="appStore.budgetTimeframes.length > 0">
                         <v-col cols="12">
                             <v-banner
                                 icon="mdi-exclamation-thick"
@@ -67,7 +66,7 @@
                             </v-banner-text>
 
                             <template v-slot:actions>
-                                <v-btn>Import From Previous (not working)</v-btn>
+                                <v-btn>Import From Previous (Coming soon)</v-btn>
                             </template>
                             </v-banner>
                         </v-col>
@@ -86,7 +85,7 @@
                                 </v-banner-text>
 
                                 <template v-slot:actions>
-                                    <v-btn @click="dummyInfoForBills">Fill with sample</v-btn>
+                                    <v-btn @click="fillBills()">Fill with sample</v-btn>
                                 </template>
                             </v-banner>
                         </v-col>
@@ -107,7 +106,7 @@
                                 </v-banner-text>
 
                                 <template v-slot:actions>
-                                    <v-btn>Fill with sample</v-btn>
+                                    <v-btn @click="fillExpenses()">Fill with sample</v-btn>
                                 </template>
                             </v-banner>
                         </v-col>
@@ -128,7 +127,7 @@
                                 </v-banner-text>
 
                                 <template v-slot:actions>
-                                    <v-btn>Fill with sample</v-btn>
+                                    <v-btn @click="fillSavings()">Fill with sample</v-btn>
                                 </template>
                             </v-banner>
                         </v-col>
@@ -177,6 +176,7 @@ import { Component, Vue, toNative, Prop } from "vue-facing-decorator";
 import { useAppStore } from "@/stores/app";
 import DateSelector from "../SmallBits/DateSelector.vue";
 import type { IBudget } from "@/stores/interfaces/IBudgetDefinitions";
+import { useBudgetStore } from "@/stores/budgetStore.js";
 
 @Component({
   components: {
@@ -218,14 +218,15 @@ class TimeFrameModal extends Vue {
         bills: [],
         expenses: [],
         savings: []
-    }   
+    }
 
   get appStore() {
-    return useAppStore();
+    return useBudgetStore();
   }
 
+
   get selectedBudgetTimeframe() {
-    return this.appStore.selectedBudgetTimeframe;
+    return this.appStore.selectedBudgetTimeframe
   }
 
   mounted() {
@@ -235,7 +236,6 @@ class TimeFrameModal extends Vue {
   created() {
     if (!this.isNewTimeFrame) {
         this.newTimeFrame = JSON.parse(JSON.stringify(this.selectedBudgetTimeframe))
-        console.log('here', this.newTimeFrame)
     } else {
         this.newTimeFrame = JSON.parse(JSON.stringify(this.emptyTimeFrame))
     }
@@ -245,9 +245,21 @@ class TimeFrameModal extends Vue {
     this.newTimeFrame.bills.push()
   }
 
+  normalizeBudget(budget: IBudget) {
+    const normalizeDate = (value: string | Date) => 
+        value ? new Date(value).getTime() : null;
+    
+    return {
+        ...budget,
+        startDate: normalizeDate(budget.startDate),
+        endDate: normalizeDate(budget.endDate)
+    }
+  }
+
   attemptClosing() {
-    //check if things are filled in
-    if (JSON.stringify(this.newTimeFrame) !== JSON.stringify(this.emptyTimeFrame)) {
+    const timeframeNew = this.normalizeBudget(this.newTimeFrame);
+    const empty = this.normalizeBudget(this.emptyTimeFrame)
+    if (JSON.stringify(timeframeNew) !== JSON.stringify(empty)) {
         this.showConfirmationModal = true
     }
     else this.closeModal()
@@ -256,6 +268,79 @@ class TimeFrameModal extends Vue {
   closeModal() {
     this.showConfirmationModal = false
     this.$emit("closeModal");
+  }
+
+  saveNewTimeframe() {
+    this.appStore.addNewTimeframe(this.newTimeFrame)
+    this.closeModal();
+  }
+
+  fillBills() {
+    const billsExample = [
+        {
+            description: 'Rent',
+            amount: 1500.00,
+            notes: '',
+            transactions: []
+        },
+        {
+            description: 'Phone Bill',
+            amount: 200.00,
+            notes: '',
+            transactions: []
+        },
+        {
+            description: 'Other Bills',
+            amount: 500.00,
+            notes: '',
+            transactions: []
+        }
+    ]
+    this.newTimeFrame.bills = billsExample
+  }
+
+  fillExpenses() {
+    const expenseExample = [
+        {
+            description: 'Groceries',
+            amount: 4000.00,
+            notes: '',
+            transactions: []
+        },
+        {
+            description: 'Gas',
+            amount: 1000.00,
+            notes: '',
+            transactions: []
+        },
+        {
+            description: 'Personal spending',
+            amount: 2000.00,
+            notes: '',
+            transactions: []
+        }
+    ]
+    this.newTimeFrame.expenses = expenseExample
+  }
+
+  fillSavings() {
+    const savingsExample = [
+        {
+            description: 'True Savings',
+            amount: 1500.00,
+            notes: '',
+            startingAmount: 10000.00,
+            transactions: []
+        },
+        {
+            description: 'Big Buy Savings',
+            amount: 500.00,
+            notes: '',
+            startingAmount: 5000.00,
+            transactions: []
+        }
+    ]
+    this.newTimeFrame.savings = savingsExample
   }
 }
 export default toNative(TimeFrameModal);

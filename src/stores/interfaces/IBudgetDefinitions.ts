@@ -1,12 +1,14 @@
 export interface IBudgetCategories {
     description: string
     amount: number
+    notes: string
     transactions: IBudgetTransaction[]
 }
 
 export interface ISavingCategories {
     description: string
     amount: number
+    notes: string
     startingAmount: number
     transactions: IBudgetTransaction[]
 }
