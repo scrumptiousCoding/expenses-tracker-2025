@@ -257,12 +257,21 @@ class TimeFrameModal extends Vue {
   }
 
   attemptClosing() {
-    const timeframeNew = this.normalizeBudget(this.newTimeFrame);
-    const empty = this.normalizeBudget(this.emptyTimeFrame)
-    if (JSON.stringify(timeframeNew) !== JSON.stringify(empty)) {
-        this.showConfirmationModal = true
+    if (this.isNewTimeFrame) {
+        const timeframeNew = this.normalizeBudget(this.newTimeFrame)
+        const empty = this.normalizeBudget(this.emptyTimeFrame)
+        if (JSON.stringify(timeframeNew) !== JSON.stringify(empty)) {
+            this.showConfirmationModal = true
+        }
+        else this.closeModal()
+    } else {
+        const original = this.normalizeBudget(this.appStore.selectedBudgetTimeframe!)
+        const timeframeNew = this.normalizeBudget(this.newTimeFrame)
+        if (JSON.stringify(timeframeNew) !== JSON.stringify(original)) {
+            this.showConfirmationModal = true
+        }
+        else this.closeModal()
     }
-    else this.closeModal()
   }
 
   closeModal() {

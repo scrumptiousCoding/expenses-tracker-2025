@@ -50,6 +50,7 @@
                   </v-data-table>
                 </v-card-text>
               </v-card>
+
               <v-card class="mt-4">
                 <v-card-title class="sticky-note-header">
                   <v-icon size="x-small" v-tooltip:left="'The totals of each category, this is to show what you have already spent in the category'">mdi-information</v-icon>
@@ -127,15 +128,11 @@ class BudgetOverviewView extends Vue {
 
 
   get appStore() {
-      return useAppStore();
+      return useBudgetStore();
   }
 
   get selectedTimeframe() {
       return this.appStore.selectedBudgetTimeframe;
-  }
-
-  get budgetStore() {
-    return useBudgetStore();
   }
 
   get getTimeframeDates(){
@@ -143,54 +140,33 @@ class BudgetOverviewView extends Vue {
   }
 
   get getSavingsList() {
-    let savingsList: { description: string; amount: number }[] = []
-    if (this.selectedTimeframe?.savings) {
-      for (let i = 0; i < this.selectedTimeframe.savings.length; i++) {
-        const timeframe = this.selectedTimeframe.savings[i];
-        let total = 0;
-        if (timeframe.transactions) {
-          for (let j = 0; j < timeframe.transactions.length; j++) {
-            const transaction = timeframe.transactions[j];
-            total += transaction.amount
-          }
-        }
-        savingsList.push({description: timeframe.description, amount: total})
-      }
-    }
+    const buildSavingsList = (items: any[]) =>
+      items.map(item => ({
+        description: item.description,
+        amount: this.sumTransactions(item.transactions)
+      }))
     
-    return savingsList
+    return [
+      ...buildSavingsList(this.selectedTimeframe?.savings ?? [])
+    ]
   }
 
   get getSpendingDetails() {
-    let spendingList: { description: string; amount: number; type: string }[] = []
-    let total = 0
-    if (this.selectedTimeframe?.expenses) {
-      for (let i = 0; i < this.selectedTimeframe.expenses.length; i++) {
-        const expense = this.selectedTimeframe.expenses[i];
-        total = 0
-        if (expense.transactions) {
-          for (let j = 0; j < expense.transactions.length; j++) {
-            const transaction = expense.transactions[j];
-            total += transaction.amount
-          }
-        }
-        spendingList.push({description: expense.description, amount: total, type: 'Expense'})
-      }
-    }
-    if (this.selectedTimeframe?.bills) {
-      for (let i = 0; i < this.selectedTimeframe.bills.length; i++) {
-        const expense = this.selectedTimeframe.bills[i];
-        total = 0
-        if (expense.transactions) {
-          for (let j = 0; j < expense.transactions.length; j++) {
-            const transaction = expense.transactions[j];
-            total += transaction.amount
-          }
-        }
-        spendingList.push({description: expense.description, amount: total, type: 'Bill'})
-      }
-    }
-    return spendingList
+    const buildSpendingList = (items: any[], type: string) =>
+      items.map(item => ({
+        description: item.description,
+        amount: this.sumTransactions(item.transactions),
+        type
+      }))
+    
+    return [
+      ...buildSpendingList(this.selectedTimeframe?.expenses ?? [], 'Expense'),
+      ...buildSpendingList(this.selectedTimeframe?.bills ?? [], 'Bill')
+    ]
+  }
+
+  private sumTransactions(transactions: any[] = []) : number {
+    return transactions.reduce((sum, transaction) => sum + transaction.amount, 0)
   }
 
 }
