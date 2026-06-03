@@ -79,7 +79,6 @@
     
 </template>
 <script lang="ts">
-import { useAppStore } from "@/stores/app";
 import { Component, Vue, toNative } from "vue-facing-decorator";
 import { useBudgetStore } from "@/stores/budgetStore";
 import InfoCardWithButton from "./SmallBits/InfoCardWithButton.vue";
@@ -117,12 +116,14 @@ class BudgetOverviewView extends Vue {
   headers = [
     { title: "Description", value: "description" },
     { title: "Amount", value: "amount" },
+    { title: "Spent", value: "spent"},
     { title: "", key: "actions"}
   ]
   headersSpending = [
     { title: "Description", value: "description" },
-    { title: "Amount", value: "amount" },
     { title: "Type", value: "type" },
+    { title: "Amount", value: "amount" },
+    { title: "Spent", value: "spent"},
     { title: "", key: "actions"}
   ]
 
@@ -143,7 +144,8 @@ class BudgetOverviewView extends Vue {
     const buildSavingsList = (items: any[]) =>
       items.map(item => ({
         description: item.description,
-        amount: this.sumTransactions(item.transactions)
+        amount: item.amount,
+        spent: this.sumTransactions(item.transactions)
       }))
     
     return [
@@ -155,7 +157,8 @@ class BudgetOverviewView extends Vue {
     const buildSpendingList = (items: any[], type: string) =>
       items.map(item => ({
         description: item.description,
-        amount: this.sumTransactions(item.transactions),
+        amount: item.amount,
+        spent: this.sumTransactions(item.transactions),
         type
       }))
     
