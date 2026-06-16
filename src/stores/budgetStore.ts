@@ -11,7 +11,11 @@ export const useBudgetStore = defineStore("budgetStore", {
     budgetTimeframes: [],
     selectedBudgetTimeframe: null
   }),
-  getters: {},
+  getters: {
+    getClosingAmount() : number {
+        return 0
+    }
+  },
   actions: {
     addNewTimeframe(newBudget: IBudget) : void {
         const newId = this.budgetTimeframes.length > 0 ? this.budgetTimeframes[this.budgetTimeframes.length - 1].id + 1 : 1;
@@ -19,7 +23,7 @@ export const useBudgetStore = defineStore("budgetStore", {
         this.budgetTimeframes.push(newBudget)
         this.selectedBudgetTimeframe = newBudget
     },
-    
+
     clearBudgetTimeframe() {
       this.selectedBudgetTimeframe = null
     }

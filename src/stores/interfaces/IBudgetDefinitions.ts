@@ -5,14 +5,6 @@ export interface IBudgetCategories {
     transactions: IBudgetTransaction[]
 }
 
-export interface ISavingCategories {
-    description: string
-    amount: number
-    notes: string
-    startingAmount: number
-    transactions: IBudgetTransaction[]
-}
-
 export interface IBudget {
     description: string
     startingBalance: number
@@ -23,12 +15,13 @@ export interface IBudget {
 
     bills: IBudgetCategories[]
     expenses: IBudgetCategories[]
-    savings: ISavingCategories[]
+    savings: IBudgetCategories[]
 }
 
 
 export interface IBudgetTransaction {
     description: string
+    startingAmount: number | undefined
     date: Date
     id: number | null
     amount: number
